@@ -1,7 +1,7 @@
 import streamlit as st
 
-# Harus di awal
-st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
+# ⛔ WAJIB di paling atas
+st.set_page_config(page_title="🎌 Anime Recommender", layout="wide")
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -69,25 +69,20 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # ------------------------------
-# Sidebar
+# Sidebar Navigasi
 # ------------------------------
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
-st.sidebar.markdown("### 🕘 Riwayat Pencarian")
-if st.session_state.history:
-    for item in reversed(st.session_state.history):
-        st.sidebar.markdown(f"- {item}")
-else:
-    st.sidebar.info("Belum ada riwayat.")
 
 # ------------------------------
 # Halaman HOME
 # ------------------------------
 if page == "🏠 Home":
     st.title("🏠 Selamat Datang di Anime Recommender")
-    st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip! 🌸")
+    st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip 🎯")
 
-    st.image("https://media.giphy.com/media/MPxgL8kODTyNO/giphy.gif", width=300)
+    # 🎌 Ganti animasi Jepang
+    st.image("https://media.giphy.com/media/4oMoIbIQrvCjm/giphy.gif", width=300)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top10 = anime_df.sort_values(by="rating", ascending=False).head(10)
@@ -111,7 +106,14 @@ if page == "🏠 Home":
                         unsafe_allow_html=True
                     )
 
-    st.subheader("🎯 Rekomendasi dari Pencarian")
+    st.subheader("🕘 Riwayat Pencarian")
+    if st.session_state.history:
+        for item in reversed(st.session_state.history):
+            st.markdown(f"🔎 {item}")
+    else:
+        st.info("Belum ada pencarian yang dilakukan.")
+
+    st.subheader("🎯 Rekomendasi Sebelumnya")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
             st.markdown(f"<h5 style='color:#f04e7c;'>📌 Untuk: <i>{item['query']}</i></h5>", unsafe_allow_html=True)
@@ -129,14 +131,14 @@ if page == "🏠 Home":
                     unsafe_allow_html=True
                 )
     else:
-        st.info("Belum ada rekomendasi, silakan cari anime di halaman 'Rekomendasi'.")
+        st.info("Belum ada hasil rekomendasi.")
 
 # ------------------------------
 # Halaman REKOMENDASI
 # ------------------------------
 elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime")
-    st.markdown("Masukkan nama anime favoritmu dan kami akan mencarikan yang mirip ✨")
+    st.markdown("Masukkan nama anime favoritmu dan dapatkan rekomendasi genre sejenis 🎌")
 
     anime_name_input = st.text_input("🎬 Masukkan judul anime")
 
@@ -144,39 +146,27 @@ elif page == "🔎 Rekomendasi":
         anime_name = anime_name_input.strip().lower()
 
         if anime_name not in anime_df["name_lower"].values:
-            st.error("Anime tidak ditemukan. Pastikan penulisan judul benar.")
+            st.error("Anime tidak ditemukan. Pastikan penulisan judul sudah benar.")
         else:
             index = anime_df[anime_df["name_lower"] == anime_name].index[0]
             query_vec = tfidf_matrix[index]
             distances, indices = knn_model.kneighbors(query_vec, n_neighbors=6)
 
             original_title = anime_df.iloc[index]["name"]
-            st.success(f"🎉 Rekomendasi untuk: {original_title}")
-
             results = []
             for i in indices[0][1:]:
                 row = anime_df.iloc[i]
-                st.markdown(
-                    f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{row['name']}</div>
-                        <div class="anime-body">
-                            📚 {row['genre']}<br>
-                            ⭐ {row['rating']}
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
                 results.append({
                     "name": row["name"],
                     "genre": row["genre"],
                     "rating": row["rating"]
                 })
 
-            # Simpan riwayat dan hasil
+            # Simpan hasil dan history (tidak ditampilkan langsung)
             st.session_state.history.append(original_title)
             st.session_state.recommendations.append({
                 "query": original_title,
                 "results": results
             })
+
+            st.success("🎯 Rekomendasi telah ditambahkan ke halaman Home.")

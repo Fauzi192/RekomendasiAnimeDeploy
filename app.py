@@ -1,11 +1,10 @@
 import streamlit as st
-
-# HARUS DI ATAS
-st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
-
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
+
+# Konfigurasi halaman
+st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
 
 # Load data
 @st.cache_data
@@ -18,7 +17,7 @@ def load_data():
 
 anime_df = load_data()
 
-# Build model
+# Bangun model
 @st.cache_resource
 def build_model(df):
     tfidf = TfidfVectorizer(stop_words="english")
@@ -29,7 +28,7 @@ def build_model(df):
 
 knn_model, tfidf_matrix = build_model(anime_df)
 
-# CSS
+# CSS kustom
 st.markdown("""
 <style>
     .anime-card {
@@ -60,7 +59,7 @@ if "recommendations" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Navigasi
+# Navigasi sidebar
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
 
@@ -103,7 +102,9 @@ if page == "🏠 Home":
     st.subheader("🎯 Rekomendasi Baru")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
-            for anime in item["results"]:
+            # Ambil 3 rekomendasi rating tertinggi
+            top3 = sorted(item["results"], key=lambda x: x["rating"], reverse=True)[:3]
+            for anime in top3:
                 st.markdown(
                     f"""
                     <div class="anime-card">

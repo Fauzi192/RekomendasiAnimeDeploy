@@ -1,15 +1,13 @@
 import streamlit as st
 
-# ⛔ WAJIB DILETAKKAN PALING ATAS
+# HARUS DI ATAS
 st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
-# ------------------------------
-# Load Data
-# ------------------------------
+# Load data
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
@@ -20,9 +18,7 @@ def load_data():
 
 anime_df = load_data()
 
-# ------------------------------
-# Build Model
-# ------------------------------
+# Build model
 @st.cache_resource
 def build_model(df):
     tfidf = TfidfVectorizer(stop_words="english")
@@ -33,9 +29,7 @@ def build_model(df):
 
 knn_model, tfidf_matrix = build_model(anime_df)
 
-# ------------------------------
-# CSS Styling
-# ------------------------------
+# CSS
 st.markdown("""
 <style>
     .anime-card {
@@ -60,29 +54,22 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------------------
-# Inisialisasi Session State
-# ------------------------------
+# Session state
 if "recommendations" not in st.session_state:
     st.session_state.recommendations = []
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# ------------------------------
-# Sidebar Navigasi
-# ------------------------------
+# Navigasi
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
 
 # ------------------------------
-# Halaman HOME
+# HOME PAGE
 # ------------------------------
 if page == "🏠 Home":
     st.title("🏠 Selamat Datang di Anime Recommender")
     st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip 🎯")
-
-    # 🎬 Animasi bertema video player (GIF)
-    st.image("https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif", width=320)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top10 = anime_df.sort_values(by="rating", ascending=False).head(10)
@@ -113,10 +100,9 @@ if page == "🏠 Home":
     else:
         st.info("Belum ada pencarian yang dilakukan.")
 
-    st.subheader("🎯 Rekomendasi Sebelumnya")
+    st.subheader("🎯 Rekomendasi Baru")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
-            st.markdown(f"<h5 style='color:#f04e7c;'>📌 Untuk: <i>{item['query']}</i></h5>", unsafe_allow_html=True)
             for anime in item["results"]:
                 st.markdown(
                     f"""
@@ -134,7 +120,7 @@ if page == "🏠 Home":
         st.info("Belum ada hasil rekomendasi.")
 
 # ------------------------------
-# Halaman REKOMENDASI
+# REKOMENDASI PAGE
 # ------------------------------
 elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime")
@@ -175,7 +161,7 @@ elif page == "🔎 Rekomendasi":
                     "rating": row["rating"]
                 })
 
-            # Simpan hasil dan history
+            # Simpan ke history & rekomendasi
             st.session_state.history.append(original_title)
             st.session_state.recommendations.append({
                 "query": original_title,

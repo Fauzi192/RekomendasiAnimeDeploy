@@ -1,24 +1,54 @@
 import streamlit as st
-
-# HARUS DI ATAS
-st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
-
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
+# ------------------------------
+# Konfigurasi halaman
+# ------------------------------
+st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
+
+# ------------------------------
+# CSS custom
+# ------------------------------
+st.markdown("""
+<style>
+    .anime-card {
+        background-color: #f9f9ff;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border-left: 5px solid #007bff;
+    }
+    .anime-header {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #007bff;
+    }
+    .anime-body {
+        font-size: 15px;
+        color: #333;
+        line-height: 1.6;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# ------------------------------
 # Load data
+# ------------------------------
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
     df = df.dropna(subset=["name", "genre", "rating"])
     df = df.reset_index(drop=True)
-    df["name_lower"] = df["name"].str.lower()
     return df
 
 anime_df = load_data()
 
-# Build model
+# ------------------------------
+# Bangun model TF-IDF + KNN
+# ------------------------------
 @st.cache_resource
 def build_model(df):
     tfidf = TfidfVectorizer(stop_words="english")
@@ -29,49 +59,28 @@ def build_model(df):
 
 knn_model, tfidf_matrix = build_model(anime_df)
 
-# CSS
-st.markdown("""
-<style>
-    .anime-card {
-        background-color: #fffafc;
-        padding: 16px;
-        border-radius: 16px;
-        margin-bottom: 16px;
-        border-left: 5px solid #f04e7c;
-        box-shadow: 0 4px 12px rgba(240, 78, 124, 0.1);
-    }
-    .anime-header {
-        font-size: 20px;
-        font-weight: bold;
-        color: #f04e7c;
-        margin-bottom: 8px;
-    }
-    .anime-body {
-        font-size: 15px;
-        color: #333;
-        line-height: 1.6;
-    }
-</style>
-""", unsafe_allow_html=True)
-
+# ------------------------------
 # Session state
+# ------------------------------
 if "recommendations" not in st.session_state:
     st.session_state.recommendations = []
 if "history" not in st.session_state:
     st.session_state.history = []
 
+# ------------------------------
 # Navigasi
+# ------------------------------
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
 
 # ------------------------------
-# HOME PAGE
+# Halaman HOME
 # ------------------------------
 if page == "🏠 Home":
-    st.title("🏠 Selamat Datang di Anime Recommender")
-    st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip 🎯")
+    st.title("🏠 Halaman Utama")
+    st.markdown("Selamat datang di aplikasi rekomendasi anime berbasis genre! 🌸")
 
-    st.subheader("🔥 Top 10 Anime Paling Populer")
+    st.subheader("🔥 Top 10 Anime Berdasarkan Rating")
     top10 = anime_df.sort_values(by="rating", ascending=False).head(10)
 
     for i in range(0, len(top10), 2):
@@ -85,24 +94,18 @@ if page == "🏠 Home":
                         <div class="anime-card">
                             <div class="anime-header">{anime['name']}</div>
                             <div class="anime-body">
-                                📚 Genre: {anime['genre']}<br>
-                                ⭐ Rating: {anime['rating']}
+                                📚 <b>Genre:</b> {anime['genre']}<br>
+                                ⭐ <b>Rating:</b> {anime['rating']}
                             </div>
                         </div>
                         """,
                         unsafe_allow_html=True
                     )
 
-    st.subheader("🕘 Riwayat Pencarian")
-    if st.session_state.history:
-        for item in reversed(st.session_state.history):
-            st.markdown(f"🔎 {item}")
-    else:
-        st.info("Belum ada pencarian yang dilakukan.")
-
-    st.subheader("🎯 Rekomendasi Baru")
+    st.subheader("🎯 Rekomendasi Baru (Top 3 per pencarian)")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
+            st.markdown(f"<h5 style='color:#007bff;'>📌 {item['query']}</h5>", unsafe_allow_html=True)
             for anime in item["results"]:
                 st.markdown(
                     f"""
@@ -117,32 +120,39 @@ if page == "🏠 Home":
                     unsafe_allow_html=True
                 )
     else:
-        st.info("Belum ada hasil rekomendasi.")
+        st.info("Belum ada pencarian dilakukan. Silakan cari anime di halaman Rekomendasi.")
 
 # ------------------------------
-# REKOMENDASI PAGE
+# Halaman REKOMENDASI
 # ------------------------------
 elif page == "🔎 Rekomendasi":
-    st.title("🔍 Cari Rekomendasi Anime")
-    st.markdown("Masukkan nama anime favoritmu dan dapatkan rekomendasi genre sejenis 🎌")
+    st.title("🔎 Cari dan Rekomendasikan Anime")
+    st.markdown("Masukkan nama anime untuk mendapatkan rekomendasi berdasarkan genre yang mirip.")
 
-    anime_name_input = st.text_input("🎬 Masukkan judul anime")
+    anime_name = st.text_input("Masukkan judul anime")
 
-    if anime_name_input:
-        anime_name = anime_name_input.strip().lower()
-
-        if anime_name not in anime_df["name_lower"].values:
-            st.error("Anime tidak ditemukan. Pastikan penulisan judul sudah benar.")
+    if anime_name:
+        if anime_name not in anime_df['name'].values:
+            st.error("Anime tidak ditemukan. Coba lagi dengan judul lain.")
         else:
-            index = anime_df[anime_df["name_lower"] == anime_name].index[0]
+            index = anime_df[anime_df['name'] == anime_name].index[0]
             query_vec = tfidf_matrix[index]
             distances, indices = knn_model.kneighbors(query_vec, n_neighbors=6)
 
-            original_title = anime_df.iloc[index]["name"]
-            results = []
+            original_title = anime_df.iloc[index]['name']
             st.success(f"🎯 Rekomendasi berdasarkan: {original_title}")
+
+            results = []
             for i in indices[0][1:]:
                 row = anime_df.iloc[i]
+                results.append({
+                    "name": row["name"],
+                    "genre": row["genre"],
+                    "rating": row["rating"]
+                })
+
+            # Tampilkan hasil di halaman ini juga
+            for row in results:
                 st.markdown(
                     f"""
                     <div class="anime-card">
@@ -155,15 +165,11 @@ elif page == "🔎 Rekomendasi":
                     """,
                     unsafe_allow_html=True
                 )
-                results.append({
-                    "name": row["name"],
-                    "genre": row["genre"],
-                    "rating": row["rating"]
-                })
 
-            # Simpan ke history & rekomendasi
+            # Simpan history dan 3 hasil terbaik
             st.session_state.history.append(original_title)
+            top3 = sorted(results, key=lambda x: x["rating"], reverse=True)[:3]
             st.session_state.recommendations.append({
                 "query": original_title,
-                "results": results
+                "results": top3
             })

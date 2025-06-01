@@ -1,7 +1,7 @@
 import streamlit as st
 
-# ⛔ WAJIB di paling atas
-st.set_page_config(page_title="🎌 Anime Recommender", layout="wide")
+# ⛔ WAJIB DILETAKKAN PALING ATAS
+st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -81,8 +81,8 @@ if page == "🏠 Home":
     st.title("🏠 Selamat Datang di Anime Recommender")
     st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip 🎯")
 
-    # 🎌 Ganti animasi Jepang
-    st.image("https://media.giphy.com/media/4oMoIbIQrvCjm/giphy.gif", width=300)
+    # 🎬 Animasi bertema video player (GIF)
+    st.image("https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif", width=320)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top10 = anime_df.sort_values(by="rating", ascending=False).head(10)
@@ -154,19 +154,30 @@ elif page == "🔎 Rekomendasi":
 
             original_title = anime_df.iloc[index]["name"]
             results = []
+            st.success(f"🎯 Rekomendasi berdasarkan: {original_title}")
             for i in indices[0][1:]:
                 row = anime_df.iloc[i]
+                st.markdown(
+                    f"""
+                    <div class="anime-card">
+                        <div class="anime-header">{row['name']}</div>
+                        <div class="anime-body">
+                            📚 {row['genre']}<br>
+                            ⭐ {row['rating']}
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
                 results.append({
                     "name": row["name"],
                     "genre": row["genre"],
                     "rating": row["rating"]
                 })
 
-            # Simpan hasil dan history (tidak ditampilkan langsung)
+            # Simpan hasil dan history
             st.session_state.history.append(original_title)
             st.session_state.recommendations.append({
                 "query": original_title,
                 "results": results
             })
-
-            st.success("🎯 Rekomendasi telah ditambahkan ke halaman Home.")

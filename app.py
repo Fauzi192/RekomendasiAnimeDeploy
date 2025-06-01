@@ -105,7 +105,7 @@ if page == "🏠 Home":
     st.subheader("🎯 Rekomendasi Baru (Top 3 per pencarian)")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
-            st.markdown(f"<h5 style='color:#007bff;'>📌 {item['query']}</h5>", unsafe_allow_html=True)
+            st.markdown(f"<h5 style='color:#007bff;'>📌 Rekomendasi untuk: <i>{item['query']}</i></h5>", unsafe_allow_html=True)
             for anime in item["results"]:
                 st.markdown(
                     f"""

@@ -67,7 +67,7 @@ page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
 # HOME PAGE
 # ------------------------------
 if page == "🏠 Home":
-    st.title("🏠 Selamat Datang di Anime Recommender")
+    st.title("🏠 Selamat Datang di Rekomendasi Anime")
     st.markdown("Temukan anime favoritmu berdasarkan genre yang mirip 🎯")
 
     st.subheader("🔥 Top 10 Anime Paling Populer")

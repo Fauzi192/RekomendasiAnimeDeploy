@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
 # Konfigurasi halaman
-st.set_page_config(page_title="🎥 Anime Recommender", layout="wide")
+st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 
 # Load data
 @st.cache_data

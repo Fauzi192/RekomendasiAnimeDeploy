@@ -14,11 +14,14 @@ def load_data():
     # Hapus data kosong di kolom penting
     df = df.dropna(subset=["name", "genre", "rating"])
 
-    # Hapus data dengan rating - 1
-    df = df[df["rating"] >= 1]
-
-     # Hapus duplikat berdasarkan nama anime
+    # Hapus duplikat berdasarkan nama anime
     df = df.drop_duplicates(subset=["name"], keep="first")
+
+    # Pastikan rating bertipe numerik
+    df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
+
+    # Hapus data dengan rating < 1
+    df = df[df["rating"] >= 1]
 
     # Reset index dan buat kolom pencarian lowercase
     df = df.reset_index(drop=True)
@@ -72,7 +75,7 @@ if "history" not in st.session_state:
 
 # Navigasi sidebar
 st.sidebar.title("📚 Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi"])
+page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "🎭 Genre"])
 
 # ------------------------------
 # HOME PAGE
@@ -179,3 +182,39 @@ elif page == "🔎 Rekomendasi":
                 "query": original_title,
                 "results": results
             })
+
+# ------------------------------
+# GENRE PAGE
+# ------------------------------
+elif page == "🎭 Genre":
+    st.title("🎭 Jelajahi Anime Berdasarkan Genre")
+
+    # Ekstrak semua genre unik
+    all_genres = set()
+    for genre_list in anime_df["genre"]:
+        genres = [g.strip() for g in genre_list.split(",")]
+        all_genres.update(genres)
+    sorted_genres = sorted(all_genres)
+
+    selected_genre = st.selectbox("🎨 Pilih Genre", sorted_genres)
+
+    if selected_genre:
+        filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
+        filtered = filtered.sort_values(by="rating", ascending=False)
+
+        st.subheader(f"🎬 Anime dengan Genre: {selected_genre} ({len(filtered)} ditemukan)")
+
+        for i in range(len(filtered)):
+            row = filtered.iloc[i]
+            st.markdown(
+                f"""
+                <div class="anime-card">
+                    <div class="anime-header">{row['name']}</div>
+                    <div class="anime-body">
+                        📚 {row['genre']}<br>
+                        ⭐ {row['rating']}
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )

@@ -219,4 +219,20 @@ elif page == "📂 Berdasarkan Genre":
         st.subheader(f"📺 Anime dengan Genre: {selected_genre}")
         for i in range(0, len(genre_filtered), 2):
             cols = st.columns(2)
-           
+            for j in range(2):
+                if i + j < len(genre_filtered):
+                    anime = genre_filtered.iloc[i + j]
+                    with cols[j]:
+                        st.markdown(f"""
+                        <div class="anime-card">
+                            <div class="anime-header">{anime['name']}</div>
+                            <div class="anime-body">
+                                📚 Genre: {anime['genre']}<br>
+                                ⭐ Rating: {anime['rating']}<br>
+                                👥 Members: {anime['members']}
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+    else:
+        st.info(f"Belum ada anime dengan genre {selected_genre}.")
+

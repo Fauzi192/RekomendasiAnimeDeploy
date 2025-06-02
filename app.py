@@ -91,7 +91,7 @@ if page == "🏠 Home":
     Selamat menjelajahi dunia anime dan temukan rekomendasi terbaik hanya di sini! 🌟
     """)
 
-    st.subheader("🔥 Top 10 Anime Paling Populer)")
+    st.subheader("🔥 Top 10 Anime Paling Populer")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
 
     for i in range(0, len(top_members), 2):

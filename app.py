@@ -6,13 +6,27 @@ from sklearn.neighbors import NearestNeighbors
 # Konfigurasi halaman
 st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 
-# Load data
+# Load data dengan preprocessing
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
+
+    # Hapus data kosong di kolom penting
     df = df.dropna(subset=["name", "genre", "rating"])
+
+    # Hapus duplikat berdasarkan nama anime
+    df = df.drop_duplicates(subset=["name"], keep="first")
+
+    # Pastikan rating bertipe numerik
+    df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
+
+    # Hapus data dengan rating < 1
+    df = df[df["rating"] >= 1]
+
+    # Reset index dan buat kolom pencarian lowercase
     df = df.reset_index(drop=True)
     df["name_lower"] = df["name"].str.lower()
+    
     return df
 
 anime_df = load_data()

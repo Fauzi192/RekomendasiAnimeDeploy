@@ -10,9 +10,9 @@ st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
-    df = df.dropna(subset=["name", "genre", "rating", "members"])
-    df = df[df["rating"] >= 1]
-    df = df.drop_duplicates(subset=["name", "genre"])
+    df = df.dropna(subset=["name", "genre", "rating", "members"]) #Menghapus kolom kosong
+    df = df[df["rating"] >= 1]  #Menghapus rating -1
+    df = df.drop_duplicates(subset=["name", "genre"]) # Mengecek data duplicate
     df = df.reset_index(drop=True)
     df["name_lower"] = df["name"].str.lower()
     return df
@@ -91,7 +91,7 @@ if page == "🏠 Home":
     Selamat menjelajahi dunia anime dan temukan rekomendasi terbaik hanya di sini! 🌟
     """)
 
-    st.subheader("🔥 Top 10 Anime Paling Populer (berdasarkan jumlah members)")
+    st.subheader("🔥 Top 10 Anime Paling Populer)")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
 
     for i in range(0, len(top_members), 2):

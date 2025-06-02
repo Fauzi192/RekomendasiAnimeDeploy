@@ -12,10 +12,9 @@ def load_data():
     df = pd.read_csv("anime.csv")
     df = df.dropna(subset=["name", "genre", "rating", "members"])
     df = df[df["rating"] >= 1]
-    df = df.drop_duplicates(subset=["name", "genre"])
-    df = df.reset_index(drop=True)
+    df = df.drop_duplicates(subset="name")
     df["name_lower"] = df["name"].str.lower()
-    return df
+    return df.reset_index(drop=True)
 
 anime_df = load_data()
 
@@ -30,70 +29,78 @@ def build_model(df):
 
 knn_model, tfidf_matrix = build_model(anime_df)
 
-# CSS kustom
-st.markdown("""
-<style>
-    .anime-card {
-        background-color: #fffafc;
-        padding: 16px;
-        border-radius: 16px;
-        margin-bottom: 16px;
-        border-left: 5px solid #f04e7c;
-        box-shadow: 0 4px 12px rgba(240, 78, 124, 0.1);
-    }
-    .anime-header {
-        font-size: 20px;
-        font-weight: bold;
-        color: #f04e7c;
-        margin-bottom: 8px;
-    }
-    .anime-body {
-        font-size: 15px;
-        color: #333;
-        line-height: 1.6;
-    }
-</style>
-""", unsafe_allow_html=True)
-
 # Session state
 if "recommendations" not in st.session_state:
     st.session_state.recommendations = []
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Navigasi sidebar
+# CSS kustom
+st.markdown("""
+<style>
+.anime-card {
+    background-color: #fffafc;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border-left: 5px solid #f04e7c;
+    box-shadow: 0 4px 12px rgba(240, 78, 124, 0.1);
+}
+.anime-header {
+    font-size: 20px;
+    font-weight: bold;
+    color: #f04e7c;
+    margin-bottom: 8px;
+}
+.anime-body {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Navigasi
 st.sidebar.title("📚 Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Berdasarkan Genre"])
+page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
 
 # ------------------------------
 # HOME PAGE
 # ------------------------------
 if page == "🏠 Home":
     st.title("🏠 Selamat Datang di Rekomendasi Anime")
+
+    # Penjelasan website
     st.markdown("""
-    Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
+    <div style='font-size:17px; line-height:1.8; text-align:justify'>
+        <p>🎌 <b>Selamat datang di Website Rekomendasi Anime!</b></p>
 
-    Website ini dirancang khusus bagi para penggemar anime yang ingin menemukan judul-judul anime baru dan menarik sesuai dengan selera mereka. Dengan menggunakan metode **Content-Based Filtering** dan algoritma **K-Nearest Neighbor (KNN)**, sistem kami mampu memberikan rekomendasi anime yang memiliki genre serupa dengan anime favorit Anda.
+        <p>Apakah kamu pernah merasa bingung memilih anime apa yang akan ditonton selanjutnya? Atau ingin menemukan anime yang mirip dengan anime favoritmu? Website ini hadir sebagai solusi tepat untuk para penggemar anime!</p>
 
-    Apa yang membuat sistem kami unik?
-    - **Personalisasi Rekomendasi**: Rekomendasi disesuaikan berdasarkan genre anime yang Anda pilih atau masukkan, sehingga hasilnya lebih relevan dan sesuai dengan preferensi pribadi.
-    - **Data Lengkap dan Terpercaya**: Kami menggunakan data anime yang mencakup genre, rating, dan jumlah anggota (members) yang besar sebagai indikator popularitas, sehingga rekomendasi kami bukan hanya relevan tapi juga berkualitas.
-    - **Tampilan Interaktif**: Antarmuka yang mudah digunakan dengan navigasi yang jelas, sehingga Anda dapat mencari anime, melihat anime populer, dan menjelajahi berdasarkan genre favorit dengan nyaman.
-    - **Riwayat dan Rekomendasi Terbaru**: Anda bisa melihat kembali riwayat pencarian dan hasil rekomendasi terbaru yang sudah Anda lakukan selama sesi berjalan.
-    
-    Bagaimana cara menggunakan website ini?
-    - Pada menu **Rekomendasi**, Anda cukup memasukkan judul anime favorit Anda, dan sistem akan mencari anime lain yang memiliki genre mirip.
-    - Pada menu **Berdasarkan Genre**, Anda dapat memilih genre dari dropdown untuk menampilkan daftar anime yang sesuai genre tersebut.
-    - Di halaman utama, Anda juga dapat melihat **Top 10 Anime Paling Populer** berdasarkan jumlah anggota, serta **Top 10 Anime dengan Rating Tertinggi**.
+        <p><b>🎯 Tentang Website Ini:</b><br>
+        Aplikasi ini memanfaatkan pendekatan <b>Content-Based Filtering</b> dengan algoritma <b>K-Nearest Neighbor (KNN)</b> untuk merekomendasikan anime berdasarkan kemiripan genre. Cukup masukkan judul anime favoritmu, dan sistem akan mencari anime lain yang memiliki genre serupa.</p>
 
-    Dengan sistem ini, kami berharap membantu Anda menemukan anime-anime baru yang seru dan sesuai dengan selera Anda tanpa harus bingung memilih dari banyaknya judul yang tersedia.
+        <p><b>✨ Fitur Utama:</b></p>
+        <ul>
+            <li><b>🔎 Rekomendasi Berdasarkan Judul:</b> Dapatkan rekomendasi anime serupa berdasarkan genre dari judul anime favoritmu.</li>
+            <li><b>📂 Eksplorasi Berdasarkan Genre:</b> Pilih genre tertentu untuk menampilkan daftar anime dengan genre tersebut.</li>
+            <li><b>🔥 Top Anime Populer:</b> Lihat daftar 10 anime paling populer berdasarkan jumlah <i>members</i> dan rating tertinggi.</li>
+            <li><b>🕘 Riwayat Pencarian:</b> Simpan dan tampilkan riwayat pencarian anime yang pernah kamu masukkan.</li>
+            <li><b>🎯 Rekomendasi Terbaru:</b> Tampilkan hasil rekomendasi terakhir yang kamu dapatkan secara instan.</li>
+        </ul>
 
-    Selamat menjelajahi dunia anime dan temukan rekomendasi terbaik hanya di sini! 🌟
-    """)
+        <p><b>📊 Mengapa Website Ini Bermanfaat?</b><br>
+        Dengan ribuan judul anime yang tersedia, sulit untuk menemukan anime yang benar-benar cocok dengan selera kita. Dengan bantuan sistem rekomendasi ini, kamu tidak hanya menghemat waktu, tetapi juga menemukan anime-anime baru yang kemungkinan besar akan kamu sukai!</p>
 
-    st.subheader("🔥 Top 10 Anime Paling Populer (berdasarkan jumlah members)")
+        <p><b>🚀 Siap Menjelajah Dunia Anime?</b><br>
+        Gunakan menu di sebelah kiri untuk mulai menjelajah, cari rekomendasi, atau eksplorasi berdasarkan genre favoritmu. Temukan anime yang sesuai dengan kepribadian dan preferensimu — semua dalam satu tempat!</p>
+
+        <p><b>Selamat menjelajahi dan semoga kamu menemukan anime favoritmu berikutnya! 🌟</b></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.subheader("🔥 Top 10 Anime Berdasarkan Jumlah Member")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
-
     for i in range(0, len(top_members), 2):
         cols = st.columns(2)
         for j in range(2):
@@ -111,9 +118,8 @@ if page == "🏠 Home":
                     </div>
                     """, unsafe_allow_html=True)
 
-    st.subheader("🏆 Top 10 Anime dengan Rating Tertinggi")
+    st.subheader("⭐ Top 10 Anime Berdasarkan Rating Tertinggi")
     top_rating = anime_df.sort_values(by="rating", ascending=False).head(10)
-
     for i in range(0, len(top_rating), 2):
         cols = st.columns(2)
         for j in range(2):
@@ -138,7 +144,7 @@ if page == "🏠 Home":
     else:
         st.info("Belum ada pencarian yang dilakukan.")
 
-    st.subheader("🎯 Rekomendasi Baru")
+    st.subheader("🎯 Rekomendasi Terbaru")
     if st.session_state.recommendations:
         for item in reversed(st.session_state.recommendations):
             top3 = sorted(item["results"], key=lambda x: x["rating"], reverse=True)[:3]
@@ -166,7 +172,6 @@ elif page == "🔎 Rekomendasi":
 
     if anime_name_input:
         anime_name = anime_name_input.strip().lower()
-
         if anime_name not in anime_df["name_lower"].values:
             st.error("Anime tidak ditemukan. Pastikan penulisan judul sudah benar.")
         else:
@@ -194,7 +199,6 @@ elif page == "🔎 Rekomendasi":
                     "rating": row["rating"]
                 })
 
-            # Simpan ke history & rekomendasi
             st.session_state.history.append(original_title)
             st.session_state.recommendations.append({
                 "query": original_title,
@@ -204,19 +208,15 @@ elif page == "🔎 Rekomendasi":
 # ------------------------------
 # GENRE PAGE
 # ------------------------------
-elif page == "📂 Berdasarkan Genre":
-    st.title("📂 Eksplorasi Anime Berdasarkan Genre")
+elif page == "📂 Genre":
+    st.title("📂 Jelajahi Berdasarkan Genre")
 
-    all_genres = sorted(set(
-        g.strip() for genres in anime_df["genre"].dropna() for g in genres.split(",")
-    ))
-
-    selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
+    unique_genres = sorted(set(g.strip() for sublist in anime_df["genre"].str.split(",") for g in sublist))
+    selected_genre = st.selectbox("🎭 Pilih Genre", unique_genres)
 
     genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
 
     if not genre_filtered.empty:
-        st.subheader(f"📺 Anime dengan Genre: {selected_genre}")
         for i in range(0, len(genre_filtered), 2):
             cols = st.columns(2)
             for j in range(2):
@@ -235,4 +235,3 @@ elif page == "📂 Berdasarkan Genre":
                         """, unsafe_allow_html=True)
     else:
         st.info(f"Belum ada anime dengan genre {selected_genre}.")
-

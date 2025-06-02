@@ -14,14 +14,11 @@ def load_data():
     # Hapus data kosong di kolom penting
     df = df.dropna(subset=["name", "genre", "rating"])
 
-    # Hapus duplikat berdasarkan nama anime
-    df = df.drop_duplicates(subset=["name"], keep="first")
-
-    # Pastikan rating bertipe numerik
-    df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
-
-    # Hapus data dengan rating < 1
+    # Hapus data dengan rating - 1
     df = df[df["rating"] >= 1]
+
+     # Hapus duplikat berdasarkan nama anime
+    df = df.drop_duplicates(subset=["name"], keep="first")
 
     # Reset index dan buat kolom pencarian lowercase
     df = df.reset_index(drop=True)

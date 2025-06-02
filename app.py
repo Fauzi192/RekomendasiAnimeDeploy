@@ -204,7 +204,7 @@ elif page == "🔎 Rekomendasi":
 # ------------------------------
 # GENRE PAGE
 # ------------------------------
-elif page == "📂 Berdasarkan Genre":
+elif page == "📂 Genre":
     st.title("📂 Eksplorasi Anime Berdasarkan Genre")
 
     all_genres = sorted(set(

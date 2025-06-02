@@ -63,7 +63,7 @@ if "history" not in st.session_state:
 
 # Navigasi sidebar
 st.sidebar.title("📚 Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Berdasarkan Genre"])
+page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
 
 # ------------------------------
 # HOME PAGE

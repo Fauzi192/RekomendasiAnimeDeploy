@@ -73,7 +73,7 @@ if page == "🏠 Home":
     st.markdown("""
     Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
 
-    Website ini dirancang khusus bagi para penggemar anime yang ingin menemukan judul-judul anime baru dan menarik sesuai dengan selera mereka. Dengan menggunakan metode **Content-Based Filtering** dan algoritma **K-Nearest Neighbor (KNN)**, sistem kami mampu memberikan rekomendasi anime yang memiliki genre serupa dengan anime favorit Anda.
+    Website ini dirancang bagi para penggemar anime yang ingin menemukan judul-judul anime baru dan menarik sesuai dengan selera mereka. Dengan menggunakan metode **Content-Based Filtering** dan algoritma **K-Nearest Neighbor (KNN)**, sistem kami mampu memberikan rekomendasi anime yang memiliki genre serupa dengan anime favorit Anda.
 
     Apa yang membuat sistem kami unik?
     - **Personalisasi Rekomendasi**: Rekomendasi disesuaikan berdasarkan genre anime yang Anda pilih atau masukkan, sehingga hasilnya lebih relevan dan sesuai dengan preferensi pribadi.

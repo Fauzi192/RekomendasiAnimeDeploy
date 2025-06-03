@@ -22,7 +22,7 @@ anime_df = load_data()
 # Bangun model
 @st.cache_resource
 def build_model(df):
-    tfidf = TfidfVectorizer(stop_words="english")
+    tfidf = TfidfVectorizer()
     tfidf_matrix = tfidf.fit_transform(df["genre"])
     model = NearestNeighbors(metric="cosine", algorithm="brute")
     model.fit(tfidf_matrix)

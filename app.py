@@ -230,9 +230,16 @@ elif page == "📂 Genre":
     ))
 
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
+    sort_by = st.radio("📊 Urutkan Berdasarkan:", ["Rating Tertinggi", "Members Terbanyak"])
 
     genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
-    genre_filtered = genre_filtered.sort_values(by="members", ascending=False).head(10)
+
+    if sort_by == "Rating Tertinggi":
+        genre_filtered = genre_filtered.sort_values(by="rating", ascending=False)
+    else:
+        genre_filtered = genre_filtered.sort_values(by="members", ascending=False)
+
+    genre_filtered = genre_filtered.head(10)
 
     if not genre_filtered.empty:
         st.subheader(f"📺 Top 10 Anime Genre: {selected_genre}")

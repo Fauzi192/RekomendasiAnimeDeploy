@@ -10,9 +10,9 @@ st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
-    df = df.dropna(subset=["name", "genre", "rating", "members"]) #Menghapus kolom kosong
-    df = df[df["rating"] >= 1]  #Menghapus rating -1
-    df = df.drop_duplicates(subset=["name", "genre"]) # Mengecek data duplicate
+    df = df.dropna(subset=["name", "genre", "rating", "members"])
+    df = df[df["rating"] >= 1]
+    df = df.drop_duplicates(subset=["name", "genre"])
     df = df.reset_index(drop=True)
     df["name_lower"] = df["name"].str.lower()
     return df
@@ -73,27 +73,17 @@ if page == "🏠 Home":
     st.markdown("""
     Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
 
-    Website ini dirancang bagi para penggemar anime yang ingin menemukan judul-judul anime baru dan menarik sesuai dengan selera mereka. Dengan menggunakan metode **Content-Based Filtering** dan algoritma **K-Nearest Neighbor (KNN)**, sistem kami mampu memberikan rekomendasi anime yang memiliki genre serupa dengan anime favorit Anda.
+    Temukan anime baru sesuai genre favoritmu menggunakan Content-Based Filtering dan KNN. Nikmati fitur pencarian interaktif, rekomendasi real-time, dan jelajahi genre favoritmu.
 
-    Apa yang membuat sistem kami unik?
-    - **Personalisasi Rekomendasi**: Rekomendasi disesuaikan berdasarkan genre anime yang Anda pilih atau masukkan, sehingga hasilnya lebih relevan dan sesuai dengan preferensi pribadi.
-    - **Data Lengkap dan Terpercaya**: Kami menggunakan data anime yang mencakup genre, rating, dan jumlah anggota (members) yang besar sebagai indikator popularitas, sehingga rekomendasi kami bukan hanya relevan tapi juga berkualitas.
-    - **Tampilan Interaktif**: Antarmuka yang mudah digunakan dengan navigasi yang jelas, sehingga Anda dapat mencari anime, melihat anime populer, dan menjelajahi berdasarkan genre favorit dengan nyaman.
-    - **Riwayat dan Rekomendasi Terbaru**: Anda bisa melihat kembali riwayat pencarian dan hasil rekomendasi terbaru yang sudah Anda lakukan selama sesi berjalan.
-    
-    Bagaimana cara menggunakan website ini?
-    - Pada menu **Rekomendasi**, Anda cukup memasukkan judul anime favorit Anda, dan sistem akan mencari anime lain yang memiliki genre mirip.
-    - Pada menu **Berdasarkan Genre**, Anda dapat memilih genre dari dropdown untuk menampilkan daftar anime yang sesuai genre tersebut.
-    - Di halaman utama, Anda juga dapat melihat **Top 10 Anime Paling Populer** berdasarkan jumlah anggota, serta **Top 10 Anime dengan Rating Tertinggi**.
-
-    Dengan sistem ini, kami berharap membantu Anda menemukan anime-anime baru yang seru dan sesuai dengan selera Anda tanpa harus bingung memilih dari banyaknya judul yang tersedia.
-
-    Selamat menjelajahi dunia anime dan temukan rekomendasi terbaik hanya di sini! 🌟
+    **Fitur:**
+    - 🔍 Rekomendasi personal berdasarkan anime favorit.
+    - 🧠 Algoritma KNN untuk rekomendasi berbasis genre.
+    - 📈 Top 10 anime terpopuler dan terbaik.
+    - 📂 Eksplorasi berdasarkan genre.
     """)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
-
     for i in range(0, len(top_members), 2):
         cols = st.columns(2)
         for j in range(2):
@@ -113,7 +103,6 @@ if page == "🏠 Home":
 
     st.subheader("🏆 Top 10 Anime dengan Rating Tertinggi")
     top_rating = anime_df.sort_values(by="rating", ascending=False).head(10)
-
     for i in range(0, len(top_rating), 2):
         cols = st.columns(2)
         for j in range(2):
@@ -212,11 +201,19 @@ elif page == "📂 Genre":
     ))
 
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
+    sort_by = st.radio("📊 Urutkan Berdasarkan:", ["Rating Tertinggi", "Members Terbanyak"])
 
-    genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)].head(10)
+    genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
+
+    if sort_by == "Rating Tertinggi":
+        genre_filtered = genre_filtered.sort_values(by="rating", ascending=False)
+    else:
+        genre_filtered = genre_filtered.sort_values(by="members", ascending=False)
+
+    genre_filtered = genre_filtered.head(10)
 
     if not genre_filtered.empty:
-        st.subheader(f"📺 10 Anime dengan Genre: {selected_genre}")
+        st.subheader(f"📺 Anime dengan Genre: {selected_genre}")
         for i in range(0, len(genre_filtered), 2):
             cols = st.columns(2)
             for j in range(2):
@@ -235,4 +232,3 @@ elif page == "📂 Genre":
                         """, unsafe_allow_html=True)
     else:
         st.info(f"Belum ada anime dengan genre {selected_genre}.")
-

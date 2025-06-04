@@ -72,7 +72,7 @@ if page == "🏠 Home":
     st.title("🎌 Rekomendasi Anime Berbasis Genre")
 
     st.markdown("""
-Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
+Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
 Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering** dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
 

@@ -61,7 +61,7 @@ if "recommendations" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# Navigasi sidebar
+# Sidebar navigasi
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
 
@@ -69,18 +69,41 @@ page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂
 # HOME PAGE
 # ------------------------------
 if page == "🏠 Home":
-    st.title("🏠 Selamat Datang di Rekomendasi Anime")
+    st.title("🎌 Rekomendasi Anime Berbasis Genre")
+
     st.markdown("""
-    Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
+Selamat datang di website **Rekomendasi Anime Berbasis Genre**! 🎉
 
-    Temukan anime baru sesuai genre favoritmu menggunakan Content-Based Filtering dan KNN. Nikmati fitur pencarian interaktif, rekomendasi real-time, dan jelajahi genre favoritmu.
+Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering** dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
 
-    **Fitur:**
-    - 🔍 Rekomendasi personal berdasarkan anime favorit.
-    - 🧠 Algoritma KNN untuk rekomendasi berbasis genre.
-    - 📈 Top 10 anime terpopuler dan terbaik.
-    - 📂 Eksplorasi berdasarkan genre.
-    """)
+---
+
+### 💡 Mengapa Memilih Website Ini?
+
+Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan estetika. Kami menyediakan alat cerdas untuk menemukan judul-judul anime yang sejalan dengan seleramu — baik itu action epik, romansa menyentuh, atau petualangan fantasi.
+
+---
+
+### ⚙️ Teknologi di Balik Layar
+
+Sistem ini menggunakan pendekatan:
+- **Content-Based Filtering**: Menganalisis genre dari anime favoritmu.
+- **K-Nearest Neighbors (KNN)**: Menemukan anime dengan kemiripan tinggi dalam struktur genre.
+
+---
+
+### ✨ Fitur Unggulan
+
+- 🔍 **Rekomendasi Personal**: Masukkan judul anime favorit, dan dapatkan rekomendasi mirip secara otomatis.
+- 📈 **Top 10 Anime Populer & Rating Tertinggi**: Berdasarkan jumlah member dan rating.
+- 📂 **Eksplorasi Genre**: Lihat daftar anime dari genre tertentu.
+- 🕘 **Riwayat Pencarian & Rekomendasi**: Jejak rekomendasi tetap tersedia sepanjang sesi.
+
+---
+
+🎯 **Siap Menemukan Anime Favoritmu Berikutnya?**
+Gunakan menu navigasi di kiri untuk memulai pencarian!
+""")
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
@@ -155,7 +178,6 @@ elif page == "🔎 Rekomendasi":
 
     if anime_name_input:
         anime_name = anime_name_input.strip().lower()
-
         if anime_name not in anime_df["name_lower"].values:
             st.error("Anime tidak ditemukan. Pastikan penulisan judul sudah benar.")
         else:
@@ -183,7 +205,6 @@ elif page == "🔎 Rekomendasi":
                     "rating": row["rating"]
                 })
 
-            # Simpan ke history & rekomendasi
             st.session_state.history.append(original_title)
             st.session_state.recommendations.append({
                 "query": original_title,
@@ -201,19 +222,12 @@ elif page == "📂 Genre":
     ))
 
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
-    sort_by = st.radio("📊 Urutkan Berdasarkan:", ["Rating Tertinggi", "Members Terbanyak"])
 
     genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
-
-    if sort_by == "Rating Tertinggi":
-        genre_filtered = genre_filtered.sort_values(by="rating", ascending=False)
-    else:
-        genre_filtered = genre_filtered.sort_values(by="members", ascending=False)
-
-    genre_filtered = genre_filtered.head(10)
+    genre_filtered = genre_filtered.sort_values(by="members", ascending=False).head(10)
 
     if not genre_filtered.empty:
-        st.subheader(f"📺 Anime dengan Genre: {selected_genre}")
+        st.subheader(f"📺 Top 10 Anime Genre: {selected_genre}")
         for i in range(0, len(genre_filtered), 2):
             cols = st.columns(2)
             for j in range(2):

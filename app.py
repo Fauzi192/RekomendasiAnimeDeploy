@@ -213,11 +213,10 @@ elif page == "📂 Genre":
 
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
 
-    # Batasi hasil hanya 10 anime saja
     genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)].head(10)
 
     if not genre_filtered.empty:
-        st.subheader(f"📺 Anime dengan Genre: {selected_genre}")
+        st.subheader(f"📺 10 Anime dengan Genre: {selected_genre}")
         for i in range(0, len(genre_filtered), 2):
             cols = st.columns(2)
             for j in range(2):
@@ -236,5 +235,4 @@ elif page == "📂 Genre":
                         """, unsafe_allow_html=True)
     else:
         st.info(f"Belum ada anime dengan genre {selected_genre}.")
-
 

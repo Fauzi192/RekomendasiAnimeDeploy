@@ -65,125 +65,87 @@ st.markdown("""
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre", "🎞️ Type"])
 
-# ------------------------------
-# HOME PAGE
-# ------------------------------
+# Halaman Home
 if page == "🏠 Home":
     st.title("🎌 Rekomendasi Anime Favorit")
-
     st.markdown("""
 Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
-Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering**, **Term Frequency–Inverse Document Frequency (TF-IDF)**, dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
+Website ini dirancang untuk membantu kamu menemukan anime yang cocok dengan selera pribadi hanya dengan beberapa klik saja. Dengan pertumbuhan industri anime yang sangat pesat, ratusan bahkan ribuan judul baru bermunculan setiap tahun. Hal ini dapat menyulitkan para penggemar — terutama yang baru mulai menyukai anime — untuk memilih tontonan yang sesuai dengan preferensi mereka.
 
-Website ini juga menggunakan:
-
-- **Pandas** untuk memproses data,
-- **Scikit-learn** untuk membangun dan melatih model machine learning,
-- **Streamlit** sebagai framework interaktif berbasis web.
+Melalui website ini, kamu tidak hanya bisa mendapatkan saran judul anime berdasarkan anime yang kamu sukai, tetapi juga bisa **menjelajahi rekomendasi berdasarkan genre dan jenis tayangan (type)** seperti TV Series, Movie, OVA, dan lainnya.
 
 ---
 
-### 💡 Mengapa Memilih Website Ini?
+### ⚙️ Teknologi Cerdas di Balik Layar
 
-Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan estetika. Kami menyediakan alat cerdas untuk menemukan judul-judul anime yang sejalan dengan seleramu — baik itu action epik, romansa menyentuh, atau petualangan fantasi.
-
----
-
-### ⚙️ Teknologi di Balik Layar
-
-Sistem ini memanfaatkan pendekatan gabungan dari beberapa metode **machine learning** modern untuk memberikan hasil rekomendasi anime yang **personal**, **relevan**, dan **akurat**. Teknologi inti yang digunakan antara lain:
+Sistem ini dibangun dengan pendekatan modern menggunakan **machine learning** dan pengolahan data cerdas. Berikut komponen utamanya:
 
 - 🧠 **Content-Based Filtering**  
   Sistem merekomendasikan anime baru dengan menganalisis kesamaan konten (*genre*) dari anime yang sudah kamu sukai.
+
 - 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
-  Genre setiap anime dikonversi menjadi vektor numerik menggunakan TF-IDF, yang menyoroti seberapa unik dan penting suatu genre dalam dataset.
+  Setiap genre diubah menjadi angka atau vektor berbobot untuk menunjukkan tingkat kepentingan suatu genre dalam kumpulan data.
+
 - 👥 **K-Nearest Neighbors (KNN)**  
-  Menghitung kemiripan antar anime berdasarkan vektor genre. Anime yang paling mirip dengan anime favoritmu akan muncul sebagai rekomendasi.
-""")
----
+  Menghitung kemiripan antar anime berdasarkan vektor genre, lalu memilih anime yang paling dekat (mirip) untuk direkomendasikan.
 
-### ✨ Fitur Unggulan
-
-- 🔍 **Rekomendasi Personal**: Masukkan judul anime favorit dan dapatkan rekomendasi yang mirip.
-- 📈 **Top 10 Anime Populer & Rating Tertinggi**: Lihat anime paling diminati.
-- 📂 **Eksplorasi Berdasarkan Genre**: Temukan anime dalam genre tertentu.
-- 🎞️ **Pencarian Berdasarkan Type**: Temukan anime berdasarkan format tayang seperti TV, Movie, OVA, dan lainnya.
-- 🕘 **Riwayat Input**: Simpan daftar judul atau type yang telah kamu cari selama sesi.
+Teknologi ini memastikan bahwa rekomendasi yang kamu terima **berdasarkan kesamaan yang terukur**, bukan sekadar daftar acak.
 
 ---
 
-🎯 **Siap Menemukan Anime Favoritmu Berikutnya?**
-Gunakan menu navigasi di kiri untuk memulai pencarian!
+### 🔍 Fitur Utama Website
+
+- 🎬 **Rekomendasi Personal Berdasarkan Judul**  
+  Masukkan judul anime favoritmu, lalu sistem akan menampilkan rekomendasi anime lain yang memiliki genre serupa.
+
+- 📂 **Eksplorasi Berdasarkan Genre**  
+  Kamu dapat memilih genre tertentu seperti "Action", "Romance", "Comedy", dll., dan sistem akan memberikan rekomendasi terbaik.
+
+- 🎞️ **Eksplorasi Berdasarkan Type (Format Tayang)**  
+  Temukan anime dalam format tayang seperti TV Series, Movie, OVA, atau Web.
+
+- 📈 **Top Anime**  
+  Lihat daftar anime paling populer dan dengan rating tertinggi dalam database.
+
+- 🕘 **Riwayat Interaksi Pengguna**  
+  Setiap judul yang kamu cari atau genre/type yang kamu pilih akan tercatat dan dapat dilihat kembali.
+
+---
+
+### 🤖 Teknologi yang Digunakan
+
+- **Python & Pandas** — untuk pemrosesan dan manajemen data.
+- **Scikit-learn** — untuk membangun model machine learning.
+- **TF-IDF Vectorizer** — untuk mengubah teks genre menjadi vektor numerik.
+- **K-Nearest Neighbors** — sebagai algoritma utama pencari kemiripan.
+- **Streamlit** — untuk membangun antarmuka interaktif berbasis web dengan cepat dan responsif.
+
+---
+
+🎯 **Siap Menemukan Anime Terbaik Sesuai Selera Kamu?**
+
+Gunakan menu di samping kiri untuk menjelajah semua fitur yang tersedia.
 """)
+
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
-    for i in range(0, len(top_members), 2):
-        cols = st.columns(2)
-        for j in range(2):
-            if i + j < len(top_members):
-                anime = top_members.iloc[i + j]
-                with cols[j]:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{anime['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {anime['genre']}<br>
-                            ⭐ Rating: {anime['rating']}<br>
-                            👥 Members: {anime['members']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+    for _, anime in top_members.iterrows():
+        st.markdown(f"""
+        <div class="anime-card">
+            <div class="anime-header">{anime['name']}</div>
+            <div class="anime-body">
+                📚 Genre: {anime['genre']}<br>
+                ⭐ Rating: {anime['rating']}<br>
+                👥 Members: {anime['members']}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.subheader("🏆 Top 10 Anime dengan Rating Tertinggi")
-    top_rating = anime_df.sort_values(by="rating", ascending=False).head(10)
-    for i in range(0, len(top_rating), 2):
-        cols = st.columns(2)
-        for j in range(2):
-            if i + j < len(top_rating):
-                anime = top_rating.iloc[i + j]
-                with cols[j]:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{anime['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {anime['genre']}<br>
-                            ⭐ Rating: {anime['rating']}<br>
-                            👥 Members: {anime['members']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-    st.subheader("🕘 Riwayat Pencarian")
-    if st.session_state.history:
-        for item in reversed(st.session_state.history[-10:]):
-            st.markdown(f"🔎 {item}")
-    else:
-        st.info("Belum ada pencarian.")
-
-    st.subheader("🎯 Rekomendasi Terakhir")
-    if st.session_state.recommendations:
-        for item in reversed(st.session_state.recommendations[-5:]):
-            st.markdown(f"**📌 Dari**: {item['query']}")
-            for anime in item['results']:
-                st.markdown(f"""
-                <div class="anime-card">
-                    <div class="anime-header">{anime['name']}</div>
-                    <div class="anime-body">
-                        📚 {anime['genre']}<br>
-                        ⭐ {anime['rating']}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.info("Belum ada rekomendasi.")
-# ------------------------------
-# REKOMENDASI PAGE
-# ------------------------------
+# Halaman Rekomendasi
 elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime")
-
     input_text = st.text_input("🎬 Masukkan sebagian judul anime")
 
     if input_text:
@@ -191,16 +153,10 @@ elif page == "🔎 Rekomendasi":
         if not matches.empty:
             selected_title = st.selectbox("🔽 Pilih judul", matches["name"].unique())
             anime_row = anime_df[anime_df["name"] == selected_title].iloc[0]
-            anime_genre = anime_row["genre"]
-
-            st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_row['rating']}")
-
-            query_vec = tfidf_vectorizer.transform([anime_genre])
+            query_vec = tfidf_vectorizer.transform([anime_row["genre"]])
             distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
 
             st.success(f"🎯 Rekomendasi berdasarkan genre dari: {selected_title}")
-            results = []
-            shown = 0
             for i in indices[0]:
                 result = anime_df.iloc[i]
                 if result["name"] != selected_title:
@@ -213,113 +169,55 @@ elif page == "🔎 Rekomendasi":
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                    results.append({
-                        "name": result["name"],
-                        "genre": result["genre"],
-                        "rating": result["rating"]
-                    })
-                    shown += 1
-                    if shown == 5:
-                        break
 
-            st.session_state.history.append(selected_title)
-            st.session_state.recommendations.append({
-                "query": selected_title,
-                "results": results
-            })
-        else:
-            st.warning("Judul tidak ditemukan.")
-
-# ------------------------------
-# GENRE PAGE
-# ------------------------------
+# Halaman Genre
 elif page == "📂 Genre":
-    st.title("📂 Eksplorasi Rekomendasi Berdasarkan Genre (KNN)")
-
-    all_genres = sorted(set(
-        g.strip() for genres in anime_df["genre"].dropna() for g in genres.split(",")
-    ))
-
+    st.title("📂 Eksplorasi Berdasarkan Genre")
+    all_genres = sorted(set(g.strip() for genres in anime_df["genre"] for g in genres.split(",")))
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
-    sort_by = st.radio("📊 Urutkan Hasil Berdasarkan:", ["Rating", "Members"])
 
     if selected_genre:
-        # Cari anime dengan genre tersebut
-        matching_anime = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
+        sample = anime_df[anime_df["genre"].str.contains(selected_genre)].iloc[0]
+        query_vec = tfidf_vectorizer.transform([sample["genre"]])
+        distances, indices = knn_model.kneighbors(query_vec, n_neighbors=30)
+
+        results = []
+        for i in indices[0]:
+            anime = anime_df.iloc[i]
+            if selected_genre.lower() in anime["genre"].lower():
+                results.append(anime)
         
-        if matching_anime.empty:
-            st.warning("Tidak ditemukan anime dengan genre tersebut.")
-        else:
-            # Ambil genre dari anime pertama
-            genre_text = matching_anime.iloc[0]["genre"]
-            query_vec = tfidf_vectorizer.transform([genre_text])
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=30)
+        for _, anime in pd.DataFrame(results).sort_values(by="rating", ascending=False).head(5).iterrows():
+            st.markdown(f"""
+            <div class="anime-card">
+                <div class="anime-header">{anime['name']}</div>
+                <div class="anime-body">
+                    📚 Genre: {anime['genre']}<br>
+                    ⭐ Rating: {anime['rating']}<br>
+                    👥 Members: {anime['members']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-            # Ambil anime hasil KNN yang memiliki genre yang cocok
-            knn_results = []
-            for i in indices[0]:
-                anime = anime_df.iloc[i]
-                if selected_genre.lower() in anime["genre"].lower():
-                    knn_results.append({
-                        "name": anime["name"],
-                        "genre": anime["genre"],
-                        "rating": anime["rating"],
-                        "members": anime["members"]
-                    })
-
-            # Sort hasil
-            if sort_by == "Rating":
-                knn_results = sorted(knn_results, key=lambda x: x["rating"], reverse=True)
-            else:
-                knn_results = sorted(knn_results, key=lambda x: x["members"], reverse=True)
-
-            knn_results = knn_results[:5]  # Ambil 5 teratas
-
-            if knn_results:
-                st.subheader(f"🎯 Rekomendasi Anime Genre '{selected_genre}' Berdasarkan KNN")
-                for anime in knn_results:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{anime['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {anime['genre']}<br>
-                            ⭐ Rating: {anime['rating']}<br>
-                            👥 Members: {anime['members']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                # Simpan ke history
-                st.session_state.history.append(f"Genre: {selected_genre}")
-                st.session_state.recommendations.append({
-                    "query": f"Genre: {selected_genre}",
-                    "results": knn_results
-                })
-            else:
-                st.info("Belum ada hasil rekomendasi yang cocok dengan genre tersebut.")
-
-# ------------------------------
-# TYPE PAGE
-# ------------------------------
+# Halaman Type
 elif page == "🎞️ Type":
-    st.title("🎞️ Eksplorasi Rekomendasi Berdasarkan Type")
-
-    all_types = anime_df["type"].dropna().unique()
+    st.title("🎞️ Eksplorasi Berdasarkan Type")
+    all_types = anime_df["type"].unique()
     selected_type = st.selectbox("🎬 Pilih Type", sorted(all_types))
-    sort_by = st.radio("📊 Urutkan Hasil Berdasarkan:", ["Rating", "Members"])
 
     if selected_type:
-        filtered = anime_df[anime_df["type"] == selected_type]
+        type_df = anime_df[anime_df["type"] == selected_type]
+        sample = type_df.iloc[0]
+        query_vec = tfidf_vectorizer.transform([sample["genre"]])
+        distances, indices = knn_model.kneighbors(query_vec, n_neighbors=30)
 
-        if sort_by == "Rating":
-            sorted_anime = filtered.sort_values(by="rating", ascending=False)
-        else:
-            sorted_anime = filtered.sort_values(by="members", ascending=False)
+        results = []
+        for i in indices[0]:
+            anime = anime_df.iloc[i]
+            if anime["type"] == selected_type:
+                results.append(anime)
 
-        top_anime = sorted_anime.head(5)
-
-        st.subheader(f"🎯 Top 5 Anime dengan Type '{selected_type}'")
-        for _, anime in top_anime.iterrows():
+        for _, anime in pd.DataFrame(results).sort_values(by="rating", ascending=False).head(5).iterrows():
             st.markdown(f"""
             <div class="anime-card">
                 <div class="anime-header">{anime['name']}</div>
@@ -331,10 +229,3 @@ elif page == "🎞️ Type":
                 </div>
             </div>
             """, unsafe_allow_html=True)
-
-        # Simpan ke history
-        st.session_state.history.append(f"Type: {selected_type}")
-        st.session_state.recommendations.append({
-            "query": f"Type: {selected_type}",
-            "results": top_anime.to_dict(orient="records")
-        })

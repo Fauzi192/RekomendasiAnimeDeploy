@@ -233,9 +233,6 @@ elif page == "🔎 Rekomendasi":
 # ------------------------------
 # GENRE PAGE
 # ------------------------------
-# ------------------------------
-# GENRE PAGE
-# ------------------------------
 elif page == "📂 Genre":
     st.title("📂 Eksplorasi Rekomendasi Berdasarkan Genre (KNN)")
 
@@ -300,3 +297,44 @@ elif page == "📂 Genre":
                 })
             else:
                 st.info("Belum ada hasil rekomendasi yang cocok dengan genre tersebut.")
+
+# ------------------------------
+# TYPE PAGE
+# ------------------------------
+elif page == "🎞️ Type":
+    st.title("🎞️ Eksplorasi Rekomendasi Berdasarkan Type")
+
+    all_types = anime_df["type"].dropna().unique()
+    selected_type = st.selectbox("🎬 Pilih Type", sorted(all_types))
+    sort_by = st.radio("📊 Urutkan Hasil Berdasarkan:", ["Rating", "Members"])
+
+    if selected_type:
+        filtered = anime_df[anime_df["type"] == selected_type]
+
+        if sort_by == "Rating":
+            sorted_anime = filtered.sort_values(by="rating", ascending=False)
+        else:
+            sorted_anime = filtered.sort_values(by="members", ascending=False)
+
+        top_anime = sorted_anime.head(5)
+
+        st.subheader(f"🎯 Top 5 Anime dengan Type '{selected_type}'")
+        for _, anime in top_anime.iterrows():
+            st.markdown(f"""
+            <div class="anime-card">
+                <div class="anime-header">{anime['name']}</div>
+                <div class="anime-body">
+                    📚 Genre: {anime['genre']}<br>
+                    ⭐ Rating: {anime['rating']}<br>
+                    👥 Members: {anime['members']}<br>
+                    🎞️ Type: {anime['type']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Simpan ke history
+        st.session_state.history.append(f"Type: {selected_type}")
+        st.session_state.recommendations.append({
+            "query": f"Type: {selected_type}",
+            "results": top_anime.to_dict(orient="records")
+        })

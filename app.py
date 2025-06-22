@@ -55,12 +55,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Session state
-if "recommendations" not in st.session_state:
-    st.session_state.recommendations = []
-if "history" not in st.session_state:
-    st.session_state.history = []
-
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
@@ -112,92 +106,45 @@ Dengan kombinasi ketiga ini, sistem mampu memberikan hasil rekomendasi yang lebi
 Gunakan menu navigasi di kiri untuk memulai pencarian!
 """)
 
-    st.subheader("🔥 Top 10 Anime Paling Populer")
-    top_members = anime_df.sort_values(by="members", ascending=False).head(10)
-    for i in range(0, len(top_members), 2):
-        cols = st.columns(2)
-        for j in range(2):
-            if i + j < len(top_members):
-                anime = top_members.iloc[i + j]
-                with cols[j]:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{anime['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {anime['genre']}<br>
-                            ⭐ Rating: {anime['rating']}<br>
-                            👥 Members: {anime['members']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-    st.subheader("🏆 Top 10 Anime dengan Rating Tertinggi")
-    top_rating = anime_df.sort_values(by="rating", ascending=False).head(10)
-    for i in range(0, len(top_rating), 2):
-        cols = st.columns(2)
-        for j in range(2):
-            if i + j < len(top_rating):
-                anime = top_rating.iloc[i + j]
-                with cols[j]:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{anime['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {anime['genre']}<br>
-                            ⭐ Rating: {anime['rating']}<br>
-                            👥 Members: {anime['members']}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-
 # ------------------------------
 # REKOMENDASI PAGE
 # ------------------------------
 elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime Berdasarkan Genre")
 
-    all_titles = anime_df["name"].tolist()
-    selected_title = st.selectbox("🎬 Pilih judul anime (ketik sebagian kata)", all_titles)
+    input_text = st.text_input("🎬 Masukkan sebagian judul anime")
 
-    if selected_title:
-        anime_row = anime_df[anime_df["name"] == selected_title].iloc[0]
-        anime_genre = anime_row["genre"]
-        anime_rating = anime_row["rating"]
+    if input_text:
+        matches = anime_df[anime_df["name_lower"].str.contains(input_text.strip().lower())]
+        if not matches.empty:
+            selected_title = st.selectbox("🔽 Pilih judul anime", matches["name"].unique())
+            anime_row = anime_df[anime_df["name"] == selected_title].iloc[0]
+            anime_genre = anime_row["genre"]
 
-        st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_rating}")
+            st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_row['rating']}")
 
-        query_vec = tfidf_vectorizer.transform([anime_genre])
-        distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
+            query_vec = tfidf_vectorizer.transform([anime_genre])
+            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
 
-        st.success(f"🎯 Rekomendasi anime berdasarkan genre dari: {selected_title}")
-        results = []
-        shown = 0
-        for i in indices[0]:
-            row = anime_df.iloc[i]
-            if row["name"] != selected_title:
-                st.markdown(f"""
-                <div class="anime-card">
-                    <div class="anime-header">{row['name']}</div>
-                    <div class="anime-body">
-                        📚 Genre: {row['genre']}<br>
-                        ⭐ Rating: {row['rating']}
+            st.success(f"🎯 Rekomendasi anime berdasarkan genre dari: {selected_title}")
+            shown = 0
+            for i in indices[0]:
+                result = anime_df.iloc[i]
+                if result["name"] != selected_title:
+                    st.markdown(f"""
+                    <div class="anime-card">
+                        <div class="anime-header">{result['name']}</div>
+                        <div class="anime-body">
+                            📚 Genre: {result['genre']}<br>
+                            ⭐ Rating: {result['rating']}
+                        </div>
                     </div>
-                </div>
-                """, unsafe_allow_html=True)
-                results.append({
-                    "name": row["name"],
-                    "genre": row["genre"],
-                    "rating": row["rating"]
-                })
-                shown += 1
-                if shown == 5:
-                    break
-
-        st.session_state.history.append(selected_title)
-        st.session_state.recommendations.append({
-            "query": selected_title,
-            "results": results
-        })
+                    """, unsafe_allow_html=True)
+                    shown += 1
+                    if shown == 5:
+                        break
+        else:
+            st.warning("Anime tidak ditemukan. Coba ketik sebagian judul lainnya.")
 
 # ------------------------------
 # GENRE PAGE
@@ -210,34 +157,44 @@ elif page == "📂 Genre":
     ))
 
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
-    sort_by = st.radio("📊 Urutkan Berdasarkan:", ["Rating Tertinggi", "Members Terbanyak"])
+    filtered_df = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
 
-    genre_filtered = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
-
-    if sort_by == "Rating Tertinggi":
-        genre_filtered = genre_filtered.sort_values(by="rating", ascending=False)
+    if filtered_df.empty:
+        st.warning(f"Belum ada anime dengan genre {selected_genre}.")
     else:
-        genre_filtered = genre_filtered.sort_values(by="members", ascending=False)
+        st.subheader(f"🎬 5 Anime Teratas dari Genre: {selected_genre}")
+        top_df = filtered_df.sort_values(by="rating", ascending=False).head(5)
+        for index, anime in top_df.iterrows():
+            st.markdown(f"""
+            <div class="anime-card">
+                <div class="anime-header">{anime['name']}</div>
+                <div class="anime-body">
+                    📚 Genre: {anime['genre']}<br>
+                    ⭐ Rating: {anime['rating']}<br>
+                    👥 Members: {anime['members']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-    genre_filtered = genre_filtered.head(10)
+        # Gunakan genre pertama dari top_df sebagai basis rekomendasi
+        genre_basis = top_df.iloc[0]["genre"]
+        query_vec = tfidf_vectorizer.transform([genre_basis])
+        distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
 
-    if not genre_filtered.empty:
-        st.subheader(f"📺 Top 10 Anime Genre: {selected_genre}")
-        for i in range(0, len(genre_filtered), 2):
-            cols = st.columns(2)
-            for j in range(2):
-                if i + j < len(genre_filtered):
-                    anime = genre_filtered.iloc[i + j]
-                    with cols[j]:
-                        st.markdown(f"""
-                        <div class="anime-card">
-                            <div class="anime-header">{anime['name']}</div>
-                            <div class="anime-body">
-                                📚 Genre: {anime['genre']}<br>
-                                ⭐ Rating: {anime['rating']}<br>
-                                👥 Members: {anime['members']}
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-    else:
-        st.info(f"Belum ada anime dengan genre {selected_genre}.")
+        st.subheader("🤝 Rekomendasi Mirip Berdasarkan Genre (KNN)")
+        shown = 0
+        for i in indices[0]:
+            anime = anime_df.iloc[i]
+            if anime["genre"] != genre_basis and selected_genre.lower() in anime["genre"].lower():
+                st.markdown(f"""
+                <div class="anime-card">
+                    <div class="anime-header">{anime['name']}</div>
+                    <div class="anime-body">
+                        📚 Genre: {anime['genre']}<br>
+                        ⭐ Rating: {anime['rating']}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                shown += 1
+                if shown == 5:
+                    break

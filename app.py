@@ -92,13 +92,15 @@ Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan est
 
 ### ⚙️ Teknologi di Balik Layar
 
-- 🧠 **Content-Based Filtering**  
-  Menganalisis konten (genre) dari anime favoritmu dan mencocokkannya dengan anime lain yang serupa.
-- 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
-  Mengkonversi genre menjadi angka berbobot untuk mengenali kekhasan tiap genre.
-- 👥 **K-Nearest Neighbors (KNN)**  
-  Mencari anime terdekat berdasarkan kemiripan vektor genre.
+Sistem ini memanfaatkan pendekatan gabungan dari beberapa metode **machine learning** modern untuk memberikan hasil rekomendasi anime yang **personal**, **relevan**, dan **akurat**. Teknologi inti yang digunakan antara lain:
 
+- 🧠 **Content-Based Filtering**  
+  Sistem merekomendasikan anime baru dengan menganalisis kesamaan konten (*genre*) dari anime yang sudah kamu sukai.
+- 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
+  Genre setiap anime dikonversi menjadi vektor numerik menggunakan TF-IDF, yang menyoroti seberapa unik dan penting suatu genre dalam dataset.
+- 👥 **K-Nearest Neighbors (KNN)**  
+  Menghitung kemiripan antar anime berdasarkan vektor genre. Anime yang paling mirip dengan anime favoritmu akan muncul sebagai rekomendasi.
+""")
 ---
 
 ### ✨ Fitur Unggulan

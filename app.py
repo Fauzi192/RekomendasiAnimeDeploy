@@ -26,9 +26,9 @@ def build_model(df):
     tfidf_matrix = tfidf.fit_transform(df["genre"])
     model = NearestNeighbors(metric="cosine", algorithm="brute")
     model.fit(tfidf_matrix)
-    return model, tfidf_matrix, tfidf
+    return model, tfidf_matrix
 
-knn_model, tfidf_matrix, tfidf_vectorizer = build_model(anime_df)
+knn_model, tfidf_matrix = build_model(anime_df)
 
 # CSS kustom
 st.markdown("""
@@ -74,7 +74,43 @@ if page == "🏠 Home":
     st.markdown("""
 Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
-Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering**, **TF-IDF**, dan **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
+Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering** , **Term Frequency–Inverse Document Frequency (TF-IDF)**, dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
+
+---
+
+### 💡 Mengapa Memilih Website Ini?
+
+Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan estetika. Kami menyediakan alat cerdas untuk menemukan judul-judul anime yang sejalan dengan seleramu — baik itu action epik, romansa menyentuh, atau petualangan fantasi.
+
+---
+
+### ⚙️ Teknologi di Balik Layar
+
+Sistem ini menggunakan pendekatan gabungan dari beberapa metode machine learning untuk memberikan rekomendasi anime yang relevan dan personal:
+
+- 🧠 **Content-Based Filtering**  
+  Sistem menganalisis konten (dalam hal ini genre) dari anime favoritmu, lalu mencocokkannya dengan anime lain yang memiliki kesamaan konten. Ini memungkinkan sistem memahami preferensimu tanpa membutuhkan data pengguna lain.
+- 📊 **Term Frequency–Inverse Document Frequency (TF-IDF)**  
+  Genre diubah menjadi representasi numerik menggunakan teknik TF-IDF. TF menunjukkan seberapa sering sebuah genre muncul dalam satu anime, sementara IDF memberi bobot lebih pada genre yang jarang muncul dan bobot lebih rendah pada genre yang umum. Ini membantu sistem memahami genre khas dari setiap anime.
+- 👥 **K-Nearest Neighbors (KNN)**  
+  Setelah semua anime diubah menjadi vektor berdasarkan genre menggunakan TF-IDF, algoritma KNN digunakan untuk mencari anime yang paling mirip berdasarkan jarak cosine antar vektor. Hasilnya adalah rekomendasi anime yang memiliki struktur genre paling dekat dengan anime pilihanmu.
+
+Dengan kombinasi ketiga ini, sistem mampu memberikan hasil rekomendasi yang lebih sesuai dengan preferensi pengguna. 🌟
+
+
+---
+
+### ✨ Fitur Unggulan
+
+- 🔍 **Rekomendasi Personal**: Masukkan judul anime favorit, dan dapatkan rekomendasi mirip secara otomatis.
+- 📈 **Top 10 Anime Populer & Rating Tertinggi**: Berdasarkan jumlah member dan rating.
+- 📂 **Eksplorasi Genre**: Lihat daftar anime dari genre tertentu.
+- 🕘 **Riwayat Pencarian & Rekomendasi**: Jejak rekomendasi tetap tersedia sepanjang sesi.
+
+---
+
+🎯 **Siap Menemukan Anime Favoritmu Berikutnya?**
+Gunakan menu navigasi di kiri untuk memulai pencarian!
 """)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
@@ -225,28 +261,3 @@ elif page == "📂 Genre":
                         """, unsafe_allow_html=True)
     else:
         st.info(f"Belum ada anime dengan genre {selected_genre}.")
-
-    # Tambahan: Rekomendasi berdasarkan genre dengan KNN
-    st.subheader("🎯 Rekomendasi Berdasarkan Genre Ini")
-    genre_query_vec = tfidf_vectorizer.transform([selected_genre])
-    distances, indices = knn_model.kneighbors(genre_query_vec, n_neighbors=10)
-
-    shown = set(genre_filtered["name"])
-    count = 0
-    for i in indices[0]:
-        anime = anime_df.iloc[i]
-        if anime["name"] in shown:
-            continue
-        st.markdown(f"""
-        <div class="anime-card">
-            <div class="anime-header">{anime['name']}</div>
-            <div class="anime-body">
-                📚 Genre: {anime['genre']}<br>
-                ⭐ Rating: {anime['rating']}<br>
-                👥 Members: {anime['members']}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        count += 1
-        if count >= 5:
-            break

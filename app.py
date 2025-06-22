@@ -10,7 +10,7 @@ st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
-    df = df.dropna(subset=["name", "genre", "rating", "members"])
+    df = df.dropna(subset=["name", "genre", "rating", "members", "type"])
     df = df[df["rating"] >= 1]
     df = df.drop_duplicates(subset=["name", "genre"])
     df = df.reset_index(drop=True)
@@ -63,7 +63,7 @@ st.markdown("""
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")
-page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
+page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre", "🎞️ Type"])
 
 # ------------------------------
 # HOME PAGE
@@ -74,7 +74,13 @@ if page == "🏠 Home":
     st.markdown("""
 Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
-Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering** , **Term Frequency–Inverse Document Frequency (TF-IDF)**, dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
+Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering**, **Term Frequency–Inverse Document Frequency (TF-IDF)**, dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
+
+Website ini juga menggunakan:
+
+- **Pandas** untuk memproses data,
+- **Scikit-learn** untuk membangun dan melatih model machine learning,
+- **Streamlit** sebagai framework interaktif berbasis web.
 
 ---
 
@@ -86,20 +92,22 @@ Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan est
 
 ### ⚙️ Teknologi di Balik Layar
 
-Sistem ini menggunakan pendekatan gabungan dari beberapa metode machine learning untuk memberikan rekomendasi anime yang relevan dan personal:
-
 - 🧠 **Content-Based Filtering**  
-- 📊 **TF-IDF** (representasi vektor genre)
-- 👥 **KNN** (menghitung kemiripan antar anime)
+  Menganalisis konten (genre) dari anime favoritmu dan mencocokkannya dengan anime lain yang serupa.
+- 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
+  Mengkonversi genre menjadi angka berbobot untuk mengenali kekhasan tiap genre.
+- 👥 **K-Nearest Neighbors (KNN)**  
+  Mencari anime terdekat berdasarkan kemiripan vektor genre.
 
 ---
 
 ### ✨ Fitur Unggulan
 
-- 🔍 Rekomendasi berdasarkan input judul anime
-- 📈 Top 10 anime populer dan dengan rating tertinggi
-- 📂 Eksplorasi berdasarkan genre
-- 🕘 Riwayat pencarian dan hasil rekomendasi tersimpan selama sesi
+- 🔍 **Rekomendasi Personal**: Masukkan judul anime favorit dan dapatkan rekomendasi yang mirip.
+- 📈 **Top 10 Anime Populer & Rating Tertinggi**: Lihat anime paling diminati.
+- 📂 **Eksplorasi Berdasarkan Genre**: Temukan anime dalam genre tertentu.
+- 🎞️ **Pencarian Berdasarkan Type**: Temukan anime berdasarkan format tayang seperti TV, Movie, OVA, dan lainnya.
+- 🕘 **Riwayat Input**: Simpan daftar judul atau type yang telah kamu cari selama sesi.
 
 ---
 
@@ -168,7 +176,6 @@ Gunakan menu navigasi di kiri untuk memulai pencarian!
                 """, unsafe_allow_html=True)
     else:
         st.info("Belum ada rekomendasi.")
-
 # ------------------------------
 # REKOMENDASI PAGE
 # ------------------------------

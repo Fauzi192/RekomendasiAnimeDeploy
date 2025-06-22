@@ -26,9 +26,9 @@ def build_model(df):
     tfidf_matrix = tfidf.fit_transform(df["genre"])
     model = NearestNeighbors(metric="cosine", algorithm="brute")
     model.fit(tfidf_matrix)
-    return model, tfidf_matrix
+    return model, tfidf_matrix, tfidf
 
-knn_model, tfidf_matrix = build_model(anime_df)
+knn_model, tfidf_matrix, tfidf_vectorizer = build_model(anime_df)
 
 # CSS kustom
 st.markdown("""
@@ -97,7 +97,6 @@ Sistem ini menggunakan pendekatan gabungan dari beberapa metode machine learning
 
 Dengan kombinasi ketiga ini, sistem mampu memberikan hasil rekomendasi yang lebih sesuai dengan preferensi pengguna. 🌟
 
-
 ---
 
 ### ✨ Fitur Unggulan
@@ -151,59 +150,37 @@ Gunakan menu navigasi di kiri untuk memulai pencarian!
                     </div>
                     """, unsafe_allow_html=True)
 
-    st.subheader("🕘 Riwayat Pencarian")
-    if st.session_state.history:
-        for item in reversed(st.session_state.history):
-            st.markdown(f"🔎 {item}")
-    else:
-        st.info("Belum ada pencarian yang dilakukan.")
-
-    st.subheader("🎯 Rekomendasi Baru")
-    if st.session_state.recommendations:
-        for item in reversed(st.session_state.recommendations):
-            top3 = sorted(item["results"], key=lambda x: x["rating"], reverse=True)[:3]
-            for anime in top3:
-                st.markdown(f"""
-                <div class="anime-card">
-                    <div class="anime-header">{anime['name']}</div>
-                    <div class="anime-body">
-                        📚 {anime['genre']}<br>
-                        ⭐ {anime['rating']}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-    else:
-        st.info("Belum ada hasil rekomendasi.")
-
 # ------------------------------
 # REKOMENDASI PAGE
 # ------------------------------
 elif page == "🔎 Rekomendasi":
-    st.title("🔍 Cari Rekomendasi Anime")
-    st.markdown("Masukkan nama anime favoritmu dan dapatkan rekomendasi genre sejenis 🎌")
+    st.title("🔍 Cari Rekomendasi Anime Berdasarkan Genre")
 
-    anime_name_input = st.text_input("🎬 Masukkan judul anime")
+    all_titles = anime_df["name"].tolist()
+    selected_title = st.selectbox("🎬 Pilih judul anime (ketik sebagian kata)", all_titles)
 
-    if anime_name_input:
-        anime_name = anime_name_input.strip().lower()
-        if anime_name not in anime_df["name_lower"].values:
-            st.error("Anime tidak ditemukan. Pastikan penulisan judul sudah benar.")
-        else:
-            index = anime_df[anime_df["name_lower"] == anime_name].index[0]
-            query_vec = tfidf_matrix[index]
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=6)
+    if selected_title:
+        anime_row = anime_df[anime_df["name"] == selected_title].iloc[0]
+        anime_genre = anime_row["genre"]
+        anime_rating = anime_row["rating"]
 
-            original_title = anime_df.iloc[index]["name"]
-            results = []
-            st.success(f"🎯 Rekomendasi berdasarkan: {original_title}")
-            for i in indices[0][1:]:
-                row = anime_df.iloc[i]
+        st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_rating}")
+
+        query_vec = tfidf_vectorizer.transform([anime_genre])
+        distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
+
+        st.success(f"🎯 Rekomendasi anime berdasarkan genre dari: {selected_title}")
+        results = []
+        shown = 0
+        for i in indices[0]:
+            row = anime_df.iloc[i]
+            if row["name"] != selected_title:
                 st.markdown(f"""
                 <div class="anime-card">
                     <div class="anime-header">{row['name']}</div>
                     <div class="anime-body">
-                        📚 {row['genre']}<br>
-                        ⭐ {row['rating']}
+                        📚 Genre: {row['genre']}<br>
+                        ⭐ Rating: {row['rating']}
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -212,12 +189,15 @@ elif page == "🔎 Rekomendasi":
                     "genre": row["genre"],
                     "rating": row["rating"]
                 })
+                shown += 1
+                if shown == 5:
+                    break
 
-            st.session_state.history.append(original_title)
-            st.session_state.recommendations.append({
-                "query": original_title,
-                "results": results
-            })
+        st.session_state.history.append(selected_title)
+        st.session_state.recommendations.append({
+            "query": selected_title,
+            "results": results
+        })
 
 # ------------------------------
 # GENRE PAGE

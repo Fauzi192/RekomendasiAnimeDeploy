@@ -37,6 +37,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # CSS kustom
+# CSS untuk tema alami cerah
 st.markdown("""
 <style>
 body, .main, .stApp {
@@ -44,85 +45,90 @@ body, .main, .stApp {
     color: #2C3E50 !important;
     font-family: 'Segoe UI', sans-serif;
 }
+
 h1, h2, h3, h4, h5, h6 {
-    color: #2E8B57 !important;
+    color: #D32F2F !important;
 }
+
 section[data-testid="stSidebar"] {
-    background-color: #DFF5E1 !important;
+    background-color: #C8E6C9 !important;
+    color: #2C3E50 !important;
 }
+
 section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2 {
-    color: #2E8B57 !important;
-}
+section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] .css-1v0mbdj,
 section[data-testid="stSidebar"] .css-1inwz65 {
     color: #2C3E50 !important;
 }
+
 label, .stSelectbox label, .stTextInput label, .stRadio label {
-    color: #2E8B57 !important;
+    color: #2C3E50 !important;
     font-weight: 600;
     font-size: 15px;
 }
-input, textarea {
+
+input, textarea, .stTextInput > div > input {
     background-color: #F1FFF0 !important;
     color: #2C3E50 !important;
     border-radius: 8px !important;
     border: 1px solid #A3C9A8 !important;
     padding: 10px !important;
 }
-.stTextInput > div > input {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
-}
+
 .stTextInput > div > input:focus {
-    border-color: #82B366 !important;
-    background-color: #D6F5D6 !important;
+    border-color: #66BB6A !important;
+    background-color: #E8F5E9 !important;
 }
+
 .stSelectbox > div {
     background-color: #F1FFF0 !important;
     color: #2C3E50 !important;
     border-radius: 8px !important;
     border: 1px solid #A3C9A8 !important;
 }
-.css-1uccc91-singleValue {
-    color: #2C3E50 !important;
-}
+
+.css-1uccc91-singleValue,
+.css-1dimb5e, .css-11unzgr,
 .css-1n76uvr, .css-1e3x2xa {
     background-color: #F1FFF0 !important;
     color: #2C3E50 !important;
 }
-.css-1dimb5e, .css-11unzgr {
-    color: #2C3E50 !important;
-}
+
 .css-1n76uvr .css-1dimb5e:hover {
-    background-color: #D6F5D6 !important;
+    background-color: #E8F5E9 !important;
 }
+
 .anime-card {
     background-color: #FFFFFF;
     padding: 16px;
     border-radius: 16px;
     margin-bottom: 16px;
-    border-left: 5px solid #82B366;
-    box-shadow: 0 4px 10px rgba(130, 179, 102, 0.2);
+    border-left: 5px solid #66BB6A;
+    box-shadow: 0 4px 10px rgba(102, 187, 106, 0.2);
 }
+
 .anime-header {
     font-size: 20px;
     font-weight: bold;
-    color: #2E8B57 !important;
+    color: #388E3C !important;
     margin-bottom: 8px;
 }
+
 .anime-body {
     font-size: 15px;
     color: #2C3E50 !important;
     line-height: 1.6;
 }
+
 button, .css-1x8cf1d.edgvbvh3 {
-    background-color: #82B366 !important;
+    background-color: #66BB6A !important;
     color: white !important;
 }
+
 div[role="radiogroup"] label:hover {
-    background-color: #B8EFCF !important;
+    background-color: #C5E1A5 !important;
     border-radius: 5px;
 }
 </style>

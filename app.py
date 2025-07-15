@@ -57,12 +57,12 @@ st.markdown("""
     .anime-header {
         font-size: 20px;
         font-weight: bold;
-        color: #f04e7c;
+        color: red;
         margin-bottom: 8px;
     }
     .anime-body {
         font-size: 15px;
-        color: #333;
+        color: black;
         line-height: 1.6;
     }
 </style>

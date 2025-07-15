@@ -39,8 +39,15 @@ if "history" not in st.session_state:
 # CSS kustom
 st.markdown("""
 <style>
+    body, .main {
+        background-color: #fefefe !important;
+        color: #222222;
+    }
+    .stApp {
+        background-color: #fefefe;
+    }
     .anime-card {
-        background-color: #fffafc;
+        background-color: #fffdfd;
         padding: 16px;
         border-radius: 16px;
         margin-bottom: 16px;
@@ -176,6 +183,8 @@ elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime")
 
     input_text = st.text_input("🎬 Masukkan sebagian judul anime")
+    type_options = ["Semua"] + sorted(anime_df["type"].dropna().unique())
+    selected_type = st.selectbox("🎞️ Pilih Type Anime", type_options)
 
     if input_text:
         matches = anime_df[anime_df["name_lower"].str.contains(input_text.lower())]
@@ -187,7 +196,7 @@ elif page == "🔎 Rekomendasi":
             st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_row['rating']}")
 
             query_vec = tfidf_vectorizer.transform([anime_genre])
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=10)
+            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=20)
 
             st.success(f"🎯 Rekomendasi berdasarkan genre dari: {selected_title}")
             results = []
@@ -195,35 +204,35 @@ elif page == "🔎 Rekomendasi":
             for i in indices[0]:
                 result = anime_df.iloc[i]
                 if result["name"] != selected_title:
-                    st.markdown(f"""
-                    <div class="anime-card">
-                        <div class="anime-header">{result['name']}</div>
-                        <div class="anime-body">
-                            📚 Genre: {result['genre']}<br>
-                            ⭐ Rating: {result['rating']}
+                    if selected_type == "Semua" or result["type"] == selected_type:
+                        st.markdown(f"""
+                        <div class="anime-card">
+                            <div class="anime-header">{result['name']}</div>
+                            <div class="anime-body">
+                                📚 Genre: {result['genre']}<br>
+                                ⭐ Rating: {result['rating']}<br>
+                                🎞️ Type: {result['type']}
+                            </div>
                         </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    results.append({
-                        "name": result["name"],
-                        "genre": result["genre"],
-                        "rating": result["rating"]
-                    })
-                    shown += 1
-                    if shown == 5:
-                        break
+                        """, unsafe_allow_html=True)
+                        results.append({
+                            "name": result["name"],
+                            "genre": result["genre"],
+                            "rating": result["rating"],
+                            "type": result["type"]
+                        })
+                        shown += 1
+                        if shown == 5:
+                            break
 
-            st.session_state.history.append(selected_title)
+            st.session_state.history.append(f"{selected_title} (Type: {selected_type})")
             st.session_state.recommendations.append({
-                "query": selected_title,
+                "query": f"{selected_title} (Type: {selected_type})",
                 "results": results
             })
         else:
             st.warning("Judul tidak ditemukan.")
 
-# ------------------------------
-# GENRE PAGE
-# ------------------------------
 # ------------------------------
 # GENRE PAGE
 # ------------------------------

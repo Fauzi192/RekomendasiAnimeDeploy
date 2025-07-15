@@ -46,35 +46,33 @@ body, .main, .stApp {
     font-family: 'Segoe UI', sans-serif;
 }
 
-/* Judul */
+/* ====== Judul ====== */
 h1, h2, h3, h4, h5, h6 {
-    color: #2A5D9F !important;  /* Steel Blue */
+    color: #2A5D9F !important;
 }
 
 /* ====== Sidebar ====== */
 section[data-testid="stSidebar"] {
     background-color: #DCECFB !important;
 }
-section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2 {
-    color: #2A5D9F !important;
-}
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] .css-1v0mbdj,
-section[data-testid="stSidebar"] .css-1inwz65,
+
+/* Sidebar teks navigasi */
+section[data-testid="stSidebar"] .css-17eq0hr,
 section[data-testid="stSidebar"] .css-10trblm,
-section[data-testid="stSidebar"] .css-1cpxqw2 {
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span {
     color: #1C3F60 !important;
+    font-weight: 500;
 }
 
-/* ====== Label Form dan Judul Komponen ====== */
+/* ====== Label Form & Komponen ====== */
 label, .stSelectbox label, .stTextInput label, .stRadio label {
     color: #2A5D9F !important;
     font-weight: 600;
     font-size: 15px;
 }
 
-/* ====== Input Field Style ====== */
+/* ====== Input Field ====== */
 input, textarea {
     background-color: #F0F8FF !important;
     color: #1C3F60 !important;
@@ -91,7 +89,7 @@ input, textarea {
     background-color: #E0F0FF !important;
 }
 
-/* ====== Selectbox (Dropdown) Style ====== */
+/* ====== Selectbox (Dropdown) ====== */
 .stSelectbox > div {
     background-color: #F0F8FF !important;
     color: #1C3F60 !important;
@@ -112,6 +110,16 @@ input, textarea {
 }
 .css-1n76uvr .css-1dimb5e:hover {
     background-color: #E0F0FF !important;
+}
+
+/* ====== Radio Button Style (Rating, Members) ====== */
+div[role="radiogroup"] label {
+    color: #1C3F60 !important;
+    font-weight: 500;
+}
+div[role="radiogroup"] label:hover {
+    background-color: #CDE7FB !important;
+    border-radius: 5px;
 }
 
 /* ====== Kartu Anime ====== */
@@ -140,14 +148,9 @@ button, .css-1x8cf1d.edgvbvh3 {
     background-color: #5DADE2 !important;
     color: #FFFFFF !important;
 }
-
-/* ====== Radio Sidebar Hover ====== */
-div[role="radiogroup"] label:hover {
-    background-color: #CDE7FB !important;
-    border-radius: 5px;
-}
 </style>
 """, unsafe_allow_html=True)
+
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

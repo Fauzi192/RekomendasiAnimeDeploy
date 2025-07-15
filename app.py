@@ -39,41 +39,70 @@ if "history" not in st.session_state:
 # CSS kustom
 st.markdown("""
 <style>
+    /* Warna latar utama aplikasi */
     body, .main, .stApp {
-        background-color: #fefefe !important;
-        color: black !important;
+        background-color: #FFF9F0 !important;
+        color: #333333 !important;
         font-family: 'Segoe UI', sans-serif;
     }
+
+    /* Warna untuk semua header judul */
     h1, h2, h3, h4, h5, h6 {
-        color: red !important;
+        color: #FF4B5C !important;
     }
+
+    /* Sidebar title warna merah coral */
+    .css-10trblm, .css-qri22k {
+        color: #FF4B5C !important;
+    }
+
+    /* Warna teks sidebar lainnya tetap gelap agar terbaca */
+    .css-1v0mbdj, .css-1inwz65 {
+        color: #333333 !important;
+    }
+
+    /* Gaya kartu anime */
     .anime-card {
-        background-color: #fffdfd;
+        background-color: #FFFFFF;
         padding: 16px;
         border-radius: 16px;
         margin-bottom: 16px;
-        border-left: 5px solid #f04e7c;
-        box-shadow: 0 4px 12px rgba(240, 78, 124, 0.1);
+        border-left: 5px solid #FF6B6B;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
     }
+
     .anime-header {
         font-size: 20px;
         font-weight: bold;
-        color: red !important;
+        color: #FF4B5C !important;
         margin-bottom: 8px;
     }
+
     .anime-body {
         font-size: 15px;
-        color: black !important;
+        color: #333333 !important;
         line-height: 1.6;
     }
-    .css-10trblm.e1nzilvr1, .css-qri22k.e1nzilvr1 {
-        color: red !important;
+
+    /* Ubah tampilan input dan select agar selaras */
+    input, select, textarea {
+        background-color: #FFFFFF !important;
+        color: #333 !important;
+        border-radius: 8px !important;
     }
-    .css-1v0mbdj.ef3psqc12, .css-1v0mbdj, .css-1inwz65 {
-        color: black !important;
+
+    .stSelectbox > div {
+        background-color: #FFF;
+        border-radius: 8px;
+    }
+
+    /* Judul bagian di sidebar (misalnya Navigasi) */
+    .stSidebar h1 {
+        color: #FF4B5C;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

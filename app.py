@@ -148,7 +148,6 @@ div[role="radiogroup"] label:hover {
 }
 </style>
 """, unsafe_allow_html=True)
-)
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

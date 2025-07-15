@@ -39,70 +39,76 @@ if "history" not in st.session_state:
 # CSS kustom
 st.markdown("""
 <style>
-    /* Warna latar utama aplikasi */
+    /* Background utama halaman */
     body, .main, .stApp {
-        background-color: #FFF9F0 !important;
-        color: #333333 !important;
+        background-color: #EAF4F4 !important;
+        color: #2C3E50 !important;
         font-family: 'Segoe UI', sans-serif;
     }
 
-    /* Warna untuk semua header judul */
+    /* Warna judul dan header */
     h1, h2, h3, h4, h5, h6 {
-        color: #FF4B5C !important;
+        color: #2E8B57 !important;
     }
 
-    /* Sidebar title warna merah coral */
+    /* Sidebar title dan teks */
     .css-10trblm, .css-qri22k {
-        color: #FF4B5C !important;
+        color: #2E8B57 !important;
     }
 
-    /* Warna teks sidebar lainnya tetap gelap agar terbaca */
     .css-1v0mbdj, .css-1inwz65 {
-        color: #333333 !important;
+        color: #2C3E50 !important;
     }
 
-    /* Gaya kartu anime */
+    /* Kartu rekomendasi anime */
     .anime-card {
-        background-color: #FFFFFF;
+        background-color: #FDFDFD;
         padding: 16px;
         border-radius: 16px;
         margin-bottom: 16px;
-        border-left: 5px solid #FF6B6B;
-        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+        border-left: 5px solid #82B366;
+        box-shadow: 0 4px 10px rgba(130, 179, 102, 0.2);
     }
 
     .anime-header {
         font-size: 20px;
         font-weight: bold;
-        color: #FF4B5C !important;
+        color: #2E8B57 !important;
         margin-bottom: 8px;
     }
 
     .anime-body {
         font-size: 15px;
-        color: #333333 !important;
+        color: #2C3E50 !important;
         line-height: 1.6;
     }
 
-    /* Ubah tampilan input dan select agar selaras */
+    /* Input, select box, dan search bar */
     input, select, textarea {
-        background-color: #FFFFFF !important;
-        color: #333 !important;
+        background-color: #F1FFF0 !important;
+        color: #2C3E50 !important;
         border-radius: 8px !important;
+        border: 1px solid #A3C9A8 !important;
+        padding: 8px !important;
     }
 
-    .stSelectbox > div {
-        background-color: #FFF;
-        border-radius: 8px;
+    .stSelectbox > div, .stTextInput > div > input {
+        background-color: #F1FFF0 !important;
+        color: #2C3E50 !important;
     }
 
-    /* Judul bagian di sidebar (misalnya Navigasi) */
-    .stSidebar h1 {
-        color: #FF4B5C;
+    .stTextInput > div > input:focus, .stSelectbox > div:focus-within {
+        border-color: #82B366 !important;
+        background-color: #D6F5D6 !important;
+    }
+
+    /* Tombol atau elemen aktif (opsional tambahan) */
+    .css-1x8cf1d.edgvbvh3 {
+        background-color: #82B366 !important;
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
-
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

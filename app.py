@@ -37,6 +37,7 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # CSS kustom
+# CSS kustom
 st.markdown("""
 <style>
 /* ====== Global Background & Font ====== */
@@ -54,14 +55,15 @@ h1, h2, h3, h4, h5, h6 {
 /* ====== Sidebar ====== */
 section[data-testid="stSidebar"] {
     background-color: #DFF5E1 !important;
+    color: #2C3E50 !important;
 }
 section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2 {
-    color: #2E8B57 !important;
-}
+section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] .css-1v0mbdj,
-section[data-testid="stSidebar"] .css-1inwz65 {
+section[data-testid="stSidebar"] .css-1inwz65,
+section[data-testid="stSidebar"] .css-qrbaxs,
+section[data-testid="stSidebar"] .css-10trblm {
     color: #2C3E50 !important;
 }
 
@@ -90,22 +92,20 @@ input, textarea {
 }
 
 /* ====== Selectbox (Dropdown) Style ====== */
-.stSelectbox > div {
+.stSelectbox > div,
+.css-1dimb5e, .css-1n76uvr, .css-11unzgr,
+.css-1e3x2xa, .css-1xc3v61, .stSelectbox div[data-baseweb="select"] > div {
     background-color: #F1FFF0 !important;
     color: #2C3E50 !important;
     border-radius: 8px !important;
     border: 1px solid #A3C9A8 !important;
 }
-.css-1uccc91-singleValue {
+
+.css-1uccc91-singleValue,
+.css-qc6sy-singleValue {
     color: #2C3E50 !important;
 }
-.css-1n76uvr, .css-1e3x2xa {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
-}
-.css-1dimb5e, .css-11unzgr {
-    color: #2C3E50 !important;
-}
+
 .css-1n76uvr .css-1dimb5e:hover {
     background-color: #D6F5D6 !important;
 }
@@ -118,6 +118,7 @@ input, textarea {
     margin-bottom: 16px;
     border-left: 5px solid #82B366;
     box-shadow: 0 4px 10px rgba(130, 179, 102, 0.2);
+    color: #2C3E50;
 }
 .anime-header {
     font-size: 20px;

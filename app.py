@@ -39,19 +39,23 @@ if "history" not in st.session_state:
 # CSS kustom
 st.markdown("""
 <style>
-    /* Background utama halaman */
+    /* ======== Global Background & Font ======== */
     body, .main, .stApp {
         background-color: #EAF4F4 !important;
         color: #2C3E50 !important;
         font-family: 'Segoe UI', sans-serif;
     }
 
-    /* Warna judul dan header */
     h1, h2, h3, h4, h5, h6 {
         color: #2E8B57 !important;
     }
 
-    /* Sidebar title dan teks */
+    /* ======== Sidebar Styling ======== */
+    .css-1d391kg, .css-hxt7ib {
+        background-color: #DFF5E1 !important;
+        color: #2C3E50 !important;
+    }
+
     .css-10trblm, .css-qri22k {
         color: #2E8B57 !important;
     }
@@ -60,7 +64,7 @@ st.markdown("""
         color: #2C3E50 !important;
     }
 
-    /* Kartu rekomendasi anime */
+    /* ======== Kartu Anime ======== */
     .anime-card {
         background-color: #FDFDFD;
         padding: 16px;
@@ -83,7 +87,7 @@ st.markdown("""
         line-height: 1.6;
     }
 
-    /* Input, select box, dan search bar */
+    /* ======== Input & Select Box ======== */
     input, select, textarea {
         background-color: #F1FFF0 !important;
         color: #2C3E50 !important;
@@ -92,23 +96,55 @@ st.markdown("""
         padding: 8px !important;
     }
 
-    .stSelectbox > div, .stTextInput > div > input {
+    .stTextInput > div > input {
         background-color: #F1FFF0 !important;
         color: #2C3E50 !important;
     }
 
-    .stTextInput > div > input:focus, .stSelectbox > div:focus-within {
-        border-color: #82B366 !important;
-        background-color: #D6F5D6 !important;
+    /* Selectbox container (dropdown closed view) */
+    .stSelectbox > div {
+        background-color: #F1FFF0 !important;
+        color: #2C3E50 !important;
+        border-radius: 8px;
     }
 
-    /* Tombol atau elemen aktif (opsional tambahan) */
+    /* Dropdown opened menu */
+    .css-1n76uvr, .css-1e3x2xa {
+        background-color: #F1FFF0 !important;
+        color: #2C3E50 !important;
+    }
+
+    /* Item dropdown (text options) */
+    .css-11unzgr {
+        color: #2C3E50 !important;
+    }
+
+    /* Item aktif (hover/terpilih) */
+    .css-1n76uvr .css-1dimb5e:hover {
+        background-color: #D6F5D6 !important;
+        color: #2C3E50 !important;
+    }
+
+    /* Selected value text */
+    .css-1uccc91-singleValue {
+        color: #2C3E50 !important;
+    }
+
+    /* Label semua komponen input */
+    label, .stSelectbox label, .stTextInput label, .stRadio label {
+        color: #2E8B57 !important;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    /* Tombol utama (opsional) */
     .css-1x8cf1d.edgvbvh3 {
         background-color: #82B366 !important;
         color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

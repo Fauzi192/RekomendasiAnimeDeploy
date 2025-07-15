@@ -39,12 +39,13 @@ if "history" not in st.session_state:
 # CSS kustom
 st.markdown("""
 <style>
-    body, .main {
+    body, .main, .stApp {
         background-color: #fefefe !important;
-        color: #222222;
+        color: black !important;
+        font-family: 'Segoe UI', sans-serif;
     }
-    .stApp {
-        background-color: #fefefe;
+    h1, h2, h3, h4, h5, h6 {
+        color: red !important;
     }
     .anime-card {
         background-color: #fffdfd;
@@ -57,13 +58,19 @@ st.markdown("""
     .anime-header {
         font-size: 20px;
         font-weight: bold;
-        color: red;
+        color: red !important;
         margin-bottom: 8px;
     }
     .anime-body {
         font-size: 15px;
-        color: black;
+        color: black !important;
         line-height: 1.6;
+    }
+    .css-10trblm.e1nzilvr1, .css-qri22k.e1nzilvr1 {
+        color: red !important;
+    }
+    .css-1v0mbdj.ef3psqc12, .css-1v0mbdj, .css-1inwz65 {
+        color: black !important;
     }
 </style>
 """, unsafe_allow_html=True)

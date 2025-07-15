@@ -41,22 +41,21 @@ st.markdown("""
 <style>
 /* ====== Global Background & Font ====== */
 body, .main, .stApp {
-    background-color: #E6F0FA !important;
+    background-color: #D6EEFF !important;  /* Biru langit cerah */
     color: #1C3F60 !important;
     font-family: 'Segoe UI', sans-serif;
 }
 
-/* ====== Judul Umum ====== */
+/* ====== Judul ====== */
 h1, h2, h3, h4, h5, h6 {
     color: #2A5D9F !important;
 }
 
 /* ====== Sidebar ====== */
 section[data-testid="stSidebar"] {
-    background-color: #DCECFB !important;
+    background-color: #CCE9FF !important;
 }
 
-/* Sidebar teks navigasi dan label */
 section[data-testid="stSidebar"] .css-10trblm,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] span,
@@ -80,26 +79,22 @@ input, textarea {
     border: 1px solid #5DADE2 !important;
     padding: 10px !important;
 }
-
 .stTextInput > div > input {
     background-color: #F0F8FF !important;
     color: #1C3F60 !important;
 }
-
 .stTextInput > div > input:focus {
     border-color: #5DADE2 !important;
     background-color: #E0F0FF !important;
 }
 
-/* ====== Selectbox (Dropdown) Style ====== */
+/* ====== Selectbox (Dropdown) ====== */
 .stSelectbox > div {
     background-color: #F0F8FF !important;
     color: #1C3F60 !important;
     border-radius: 8px !important;
     border: 1px solid #5DADE2 !important;
 }
-
-/* Komponen dalam Selectbox */
 .css-1uccc91-singleValue,
 .css-1okebmr-indicatorSeparator,
 .css-qc6sy-singleValue,
@@ -112,18 +107,18 @@ input, textarea {
     background-color: #F0F8FF !important;
     color: #1C3F60 !important;
 }
-
-/* Hover di dropdown */
 .css-1n76uvr .css-1dimb5e:hover {
     background-color: #E0F0FF !important;
 }
 
-/* ====== Radio Button (Rating / Members) ====== */
+/* ====== Radio Button ====== */
 div[role="radiogroup"] label {
-    color: #1C3F60 !important;
+    color: #1C1C1C !important;
     font-weight: 500;
 }
-
+div[role="radiogroup"] input:checked + div > label {
+    color: #1C1C1C !important;
+}
 div[role="radiogroup"] label:hover {
     background-color: #CDE7FB !important;
     border-radius: 5px;
@@ -138,14 +133,12 @@ div[role="radiogroup"] label:hover {
     border-left: 5px solid #5DADE2;
     box-shadow: 0 4px 10px rgba(93, 173, 226, 0.2);
 }
-
 .anime-header {
     font-size: 20px;
     font-weight: bold;
     color: #2A5D9F !important;
     margin-bottom: 8px;
 }
-
 .anime-body {
     font-size: 15px;
     color: #1C3F60 !important;
@@ -159,6 +152,7 @@ button, .css-1x8cf1d.edgvbvh3 {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

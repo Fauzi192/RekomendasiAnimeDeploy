@@ -41,62 +41,62 @@ st.markdown("""
 <style>
 /* ====== Global Background & Font ====== */
 body, .main, .stApp {
-    background-color: #EAF4F4 !important;
-    color: #2C3E50 !important;
+    background-color: #E6F0FA !important;  /* Biru pastel */
+    color: #1C3F60 !important;
     font-family: 'Segoe UI', sans-serif;
 }
 
 /* Judul */
 h1, h2, h3, h4, h5, h6 {
-    color: #2E8B57 !important;
+    color: #2A5D9F !important;  /* Steel Blue */
 }
 
 /* ====== Sidebar ====== */
 section[data-testid="stSidebar"] {
-    background-color: #DFF5E1 !important;
+    background-color: #DCECFB !important;
 }
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2 {
-    color: #2E8B57 !important;
+    color: #2A5D9F !important;
 }
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] .css-1v0mbdj,
 section[data-testid="stSidebar"] .css-1inwz65,
 section[data-testid="stSidebar"] .css-10trblm,
 section[data-testid="stSidebar"] .css-1cpxqw2 {
-    color: #2C3E50 !important;
+    color: #1C3F60 !important;
 }
 
 /* ====== Label Form dan Judul Komponen ====== */
 label, .stSelectbox label, .stTextInput label, .stRadio label {
-    color: #2E8B57 !important;
+    color: #2A5D9F !important;
     font-weight: 600;
     font-size: 15px;
 }
 
 /* ====== Input Field Style ====== */
 input, textarea {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
+    background-color: #F0F8FF !important;
+    color: #1C3F60 !important;
     border-radius: 8px !important;
-    border: 1px solid #A3C9A8 !important;
+    border: 1px solid #5DADE2 !important;
     padding: 10px !important;
 }
 .stTextInput > div > input {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
+    background-color: #F0F8FF !important;
+    color: #1C3F60 !important;
 }
 .stTextInput > div > input:focus {
-    border-color: #82B366 !important;
-    background-color: #D6F5D6 !important;
+    border-color: #5DADE2 !important;
+    background-color: #E0F0FF !important;
 }
 
 /* ====== Selectbox (Dropdown) Style ====== */
 .stSelectbox > div {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
+    background-color: #F0F8FF !important;
+    color: #1C3F60 !important;
     border-radius: 8px !important;
-    border: 1px solid #A3C9A8 !important;
+    border: 1px solid #5DADE2 !important;
 }
 .css-1uccc91-singleValue,
 .css-1okebmr-indicatorSeparator,
@@ -107,11 +107,11 @@ input, textarea {
 .css-11unzgr,
 .css-14el2xx-placeholder,
 .css-319lph-ValueContainer {
-    background-color: #F1FFF0 !important;
-    color: #2C3E50 !important;
+    background-color: #F0F8FF !important;
+    color: #1C3F60 !important;
 }
 .css-1n76uvr .css-1dimb5e:hover {
-    background-color: #D6F5D6 !important;
+    background-color: #E0F0FF !important;
 }
 
 /* ====== Kartu Anime ====== */
@@ -120,34 +120,35 @@ input, textarea {
     padding: 16px;
     border-radius: 16px;
     margin-bottom: 16px;
-    border-left: 5px solid #82B366;
-    box-shadow: 0 4px 10px rgba(130, 179, 102, 0.2);
+    border-left: 5px solid #5DADE2;
+    box-shadow: 0 4px 10px rgba(93, 173, 226, 0.2);
 }
 .anime-header {
     font-size: 20px;
     font-weight: bold;
-    color: #2E8B57 !important;
+    color: #2A5D9F !important;
     margin-bottom: 8px;
 }
 .anime-body {
     font-size: 15px;
-    color: #2C3E50 !important;
+    color: #1C3F60 !important;
     line-height: 1.6;
 }
 
-/* ====== Tombol Aktif (Opsional) ====== */
+/* ====== Tombol Aktif ====== */
 button, .css-1x8cf1d.edgvbvh3 {
-    background-color: #82B366 !important;
-    color: white !important;
+    background-color: #5DADE2 !important;
+    color: #FFFFFF !important;
 }
 
 /* ====== Radio Sidebar Hover ====== */
 div[role="radiogroup"] label:hover {
-    background-color: #B8EFCF !important;
+    background-color: #CDE7FB !important;
     border-radius: 5px;
 }
 </style>
 """, unsafe_allow_html=True)
+)
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

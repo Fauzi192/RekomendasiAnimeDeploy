@@ -100,8 +100,25 @@ page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂
 # ==================== HOME ====================
 if page == "🏠 Home":
     st.title("🎌 Rekomendasi Anime Favorit")
+    st.markdown("""
+Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
-    st.markdown("Selamat datang di aplikasi **Rekomendasi Anime Favorit**! 🎉")
+Website ini dirancang untuk membantu kamu menemukan anime baru yang mirip dengan yang kamu suka.
+---
+### ⚙️ Teknologi yang Digunakan:
+- 🧠 **Content-Based Filtering**  
+- 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
+- 👥 **K-Nearest Neighbors (KNN)**  
+- 💻 **Streamlit** untuk antarmuka pengguna  
+- 🐍 **Pandas** & **Scikit-learn** untuk data dan machine learning  
+---
+### ✨ Fitur Unggulan:
+- Rekomendasi berdasarkan judul anime yang kamu masukkan
+- Eksplorasi anime berdasarkan genre
+- Tampilan bersih, font jelas, dan riwayat pencarian tersimpan
+---
+Silakan pilih halaman di sidebar untuk mulai eksplorasi anime favoritmu!
+""")
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
     top_members = anime_df.sort_values(by="members", ascending=False).head(10)
@@ -140,6 +157,30 @@ if page == "🏠 Home":
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
+
+    st.subheader("🕘 Riwayat Pencarian")
+    if st.session_state.history:
+        for item in reversed(st.session_state.history[-10:]):
+            st.markdown(f"🔎 {item}")
+    else:
+        st.info("Belum ada pencarian.")
+
+    st.subheader("🎯 Rekomendasi Terakhir")
+    if st.session_state.recommendations:
+        for item in reversed(st.session_state.recommendations[-5:]):
+            st.markdown(f"**📌 Dari**: {item['query']}")
+            for anime in item['results']:
+                st.markdown(f"""
+                <div class="anime-card">
+                    <div class="anime-header">{anime['name']}</div>
+                    <div class="anime-body">
+                        📚 {anime['genre']}<br>
+                        ⭐ {anime['rating']}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+    else:
+        st.info("Belum ada rekomendasi.")
 
 # ==================== REKOMENDASI ====================
 elif page == "🔎 Rekomendasi":

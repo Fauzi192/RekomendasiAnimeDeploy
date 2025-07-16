@@ -56,11 +56,6 @@ h1, h2, h3, h4, h5, h6, label, span, .stTextInput label {
     color: #000000 !important;
 }
 
-.stSelectbox > div, .css-1uccc91-singleValue, .css-1dimb5e {
-    color: #000000 !important;
-    background-color: #FFFFFF !important;
-}
-
 input, textarea {
     background-color: #FFFFFF !important;
     color: #000000 !important;
@@ -69,13 +64,13 @@ input, textarea {
     padding: 10px;
 }
 
+.stSelectbox > div, .css-1uccc91-singleValue, .css-1dimb5e {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+}
+
 div[role="radiogroup"] label {
     color: #000000 !important;
-    font-weight: 500;
-}
-div[role="radiogroup"] input[type="radio"]:checked + div > label {
-    color: #000000 !important;
-    font-weight: 700;
 }
 
 .anime-card {
@@ -267,18 +262,22 @@ elif page == "📂 Genre":
 
     if selected_genre:
         filtered_df = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
+
         if not filtered_df.empty:
             query_vec = tfidf_vectorizer.transform([selected_genre])
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=100)
+            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=50)
 
-            results, names_seen = [], set()
+            results = []
             for i in indices[0]:
                 anime = anime_df.iloc[i]
-                if anime["name"] not in names_seen and selected_genre.lower() in anime["genre"].lower():
+                if selected_genre.lower() in anime["genre"].lower():
                     results.append(anime)
-                    names_seen.add(anime["name"])
 
-            results = sorted(results, key=lambda x: x[sort_by.lower()], reverse=True)
+            if sort_by == "Rating":
+                results = sorted(results, key=lambda x: x["rating"], reverse=True)
+            else:
+                results = sorted(results, key=lambda x: x["members"], reverse=True)
+
             results = results[:5]
 
             st.subheader(f"🎯 Rekomendasi Anime Genre '{selected_genre}'")

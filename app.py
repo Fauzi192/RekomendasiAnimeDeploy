@@ -3,10 +3,14 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
-# Konfigurasi halaman
+# ---------------------------
+# Konfigurasi halaman Streamlit
+# ---------------------------
 st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 
-# Load data
+# ---------------------------
+# Load dan persiapan data
+# ---------------------------
 @st.cache_data
 def load_data():
     df = pd.read_csv("anime.csv")
@@ -19,7 +23,9 @@ def load_data():
 
 anime_df = load_data()
 
-# Bangun model
+# ---------------------------
+# Membangun model KNN berdasarkan genre
+# ---------------------------
 @st.cache_resource
 def build_model(df):
     tfidf = TfidfVectorizer()
@@ -30,187 +36,74 @@ def build_model(df):
 
 knn_model, tfidf_matrix, tfidf_vectorizer = build_model(anime_df)
 
+# ---------------------------
 # Session state
+# ---------------------------
 if "recommendations" not in st.session_state:
     st.session_state.recommendations = []
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# CSS kustom
+# ---------------------------
+# Gaya CSS custom (abu muda + animasi)
+# ---------------------------
 st.markdown("""
 <style>
-/* ====== Global Background & Font ====== */
 body, .main, .stApp {
-    background-color: #F5F5F5 !important;  /* Abu muda */
-    color: #1C3F60 !important;
+    background-color: #F2F2F2 !important;
+    color: #1C3F60;
     font-family: 'Segoe UI', sans-serif;
-    transition: background-color 0.3s ease;
-}
-
-/* ====== Sidebar ====== */
-section[data-testid="stSidebar"] {
-    background-color: #E0E0E0 !important;  /* Abu muda lebih gelap */
-    transition: background-color 0.3s ease;
-}
-section[data-testid="stSidebar"] .css-10trblm,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] .css-1v0mbdj {
-    color: #000000 !important;
-    font-weight: 500;
-}
-
-/* ====== Judul ====== */
-h1, h2, h3, h4, h5, h6 {
-    color: #2A5D9F !important;
-    transition: color 0.3s ease;
-}
-
-/* ====== Label Form & Komponen ====== */
-label, .stSelectbox label, .stTextInput label, .stRadio label {
-    color: #2A5D9F !important;
-    font-weight: 600;
-    font-size: 15px;
-    transition: color 0.3s ease;
-}
-
-/* ====== Input Field ====== */
-input, textarea {
-    background-color: #FAFAFA !important;
-    color: #1C3F60 !important;
-    border-radius: 10px !important;
-    border: 1px solid #B0BEC5 !important;
-    padding: 10px !important;
     transition: all 0.3s ease-in-out;
 }
-input:focus, textarea:focus {
-    background-color: #FFFFFF !important;
-    border: 1px solid #64B5F6 !important;
-    box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
+section[data-testid="stSidebar"] {
+    background-color: #DDDDDD !important;
+    transition: background-color 0.3s ease;
 }
-
-/* ====== Selectbox (Dropdown) ====== */
-.stSelectbox > div {
-    background-color: #FAFAFA !important;
-    color: #1C3F60 !important;
-    border-radius: 8px !important;
-    border: 1px solid #B0BEC5 !important;
+h1, h2, h3, h4 {
+    color: #2A5D9F !important;
 }
-.css-1uccc91-singleValue,
-.css-1dimb5e,
-.css-1n76uvr,
-.css-14el2xx-placeholder {
-    color: #1C3F60 !important;
-}
-.css-1n76uvr .css-1dimb5e:hover {
-    background-color: #ECEFF1 !important;
-}
-
-/* ====== Radio Button ====== */
-div[role="radiogroup"] label {
-    color: #000000 !important;
-    font-weight: 600;
-    padding: 6px 10px;
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
-}
-div[role="radiogroup"] input:checked + div > label {
-    color: #000000 !important;
-    background-color: #D0E9FF !important;
-    font-weight: 700;
-}
-div[role="radiogroup"] label:hover {
-    background-color: #CFD8DC !important;
-    transform: scale(1.03);
-}
-
-/* ====== Kartu Anime ====== */
 .anime-card {
     background-color: #FFFFFF;
     padding: 16px;
-    border-radius: 16px;
+    border-radius: 12px;
     margin-bottom: 16px;
-    border-left: 5px solid #5DADE2;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-left: 6px solid #5DADE2;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .anime-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transform: scale(1.015);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 .anime-header {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: #2A5D9F !important;
     margin-bottom: 8px;
-    transition: color 0.3s ease;
 }
 .anime-body {
-    font-size: 15px;
-    color: #1C3F60 !important;
+    font-size: 14px;
+    color: #1C3F60;
     line-height: 1.6;
-}
-
-/* ====== Tombol Aktif ====== */
-button, .css-1x8cf1d.edgvbvh3 {
-    background-color: #5DADE2 !important;
-    color: #FFFFFF !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-button:hover, .css-1x8cf1d.edgvbvh3:hover {
-    background-color: #3498DB !important;
-    transform: scale(1.03);
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar navigasi
+# ---------------------------
+# Sidebar Navigasi
+# ---------------------------
 st.sidebar.title("📚 Navigasi")
 page = st.sidebar.radio("Pilih Halaman", ["🏠 Home", "🔎 Rekomendasi", "📂 Genre"])
 
-# ------------------------------
+# ---------------------------
 # HOME PAGE
-# ------------------------------
+# ---------------------------
 if page == "🏠 Home":
     st.title("🎌 Rekomendasi Anime Favorit")
 
     st.markdown("""
-Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
-
-Website ini dirancang khusus untuk membantu para pecinta anime dalam menemukan tontonan baru yang sesuai dengan preferensi mereka. Dengan teknologi **Content-Based Filtering** , **Term Frequency–Inverse Document Frequency (TF-IDF)**, dan algoritma **K-Nearest Neighbors (KNN)**, sistem kami akan memberikan rekomendasi anime yang mirip berdasarkan genre favoritmu.
-
----
-
-### 💡 Mengapa Memilih Website Ini?
-
-Menonton anime tidak hanya hiburan biasa, tapi juga pengalaman emosional dan estetika. Kami menyediakan alat cerdas untuk menemukan judul-judul anime yang sejalan dengan seleramu — baik itu action epik, romansa menyentuh, atau petualangan fantasi.
-
----
-
-### ⚙️ Teknologi di Balik Layar
-
-Sistem ini menggunakan pendekatan gabungan dari beberapa metode machine learning untuk memberikan rekomendasi anime yang relevan dan personal:
-
-- 🧠 **Content-Based Filtering**  
-- 📊 **TF-IDF** (representasi vektor genre)
-- 👥 **KNN** (menghitung kemiripan antar anime)
-
----
-
-### ✨ Fitur Unggulan
-
-- 🔍 Rekomendasi berdasarkan input judul anime
-- 📈 Top 10 anime populer dan dengan rating tertinggi
-- 📂 Eksplorasi berdasarkan genre
-- 🕘 Riwayat pencarian dan hasil rekomendasi tersimpan selama sesi
-
----
-
-🎯 **Siap Menemukan Anime Favoritmu Berikutnya?**
-Gunakan menu navigasi di kiri untuk memulai pencarian!
+Selamat datang di aplikasi **Rekomendasi Anime**! 🎉  
+Temukan anime yang cocok dengan selera kamu berdasarkan genre favorit menggunakan teknologi **Content-Based Filtering + TF-IDF + KNN**.
 """)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
@@ -275,9 +168,9 @@ Gunakan menu navigasi di kiri untuk memulai pencarian!
     else:
         st.info("Belum ada rekomendasi.")
 
-# ------------------------------
+# ---------------------------
 # REKOMENDASI PAGE
-# ------------------------------
+# ---------------------------
 elif page == "🔎 Rekomendasi":
     st.title("🔍 Cari Rekomendasi Anime")
 
@@ -314,12 +207,7 @@ elif page == "🔎 Rekomendasi":
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
-                        results.append({
-                            "name": result["name"],
-                            "genre": result["genre"],
-                            "rating": result["rating"],
-                            "type": result["type"]
-                        })
+                        results.append(result)
                         shown += 1
                         if shown == 5:
                             break
@@ -332,9 +220,9 @@ elif page == "🔎 Rekomendasi":
         else:
             st.warning("Judul tidak ditemukan.")
 
-# ------------------------------
+# ---------------------------
 # GENRE PAGE
-# ------------------------------
+# ---------------------------
 elif page == "📂 Genre":
     st.title("📂 Eksplorasi Rekomendasi Berdasarkan Genre (KNN)")
 
@@ -346,39 +234,30 @@ elif page == "📂 Genre":
     sort_by = st.radio("📊 Urutkan Hasil Berdasarkan:", ["Rating", "Members"])
 
     if selected_genre:
-        # Cari anime dengan genre tersebut
         matching_anime = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
         
         if matching_anime.empty:
             st.warning("Tidak ditemukan anime dengan genre tersebut.")
         else:
-            # Ambil genre dari anime pertama
             genre_text = matching_anime.iloc[0]["genre"]
             query_vec = tfidf_vectorizer.transform([genre_text])
             distances, indices = knn_model.kneighbors(query_vec, n_neighbors=30)
 
-            # Ambil anime hasil KNN yang memiliki genre yang cocok
             knn_results = []
             for i in indices[0]:
                 anime = anime_df.iloc[i]
                 if selected_genre.lower() in anime["genre"].lower():
-                    knn_results.append({
-                        "name": anime["name"],
-                        "genre": anime["genre"],
-                        "rating": anime["rating"],
-                        "members": anime["members"]
-                    })
+                    knn_results.append(anime)
 
-            # Sort hasil
             if sort_by == "Rating":
                 knn_results = sorted(knn_results, key=lambda x: x["rating"], reverse=True)
             else:
                 knn_results = sorted(knn_results, key=lambda x: x["members"], reverse=True)
 
-            knn_results = knn_results[:5]  # Ambil 5 teratas
+            knn_results = knn_results[:5]
 
             if knn_results:
-                st.subheader(f"🎯 Rekomendasi Anime Genre '{selected_genre}' Berdasarkan KNN")
+                st.subheader(f"🎯 Rekomendasi Anime Genre '{selected_genre}'")
                 for anime in knn_results:
                     st.markdown(f"""
                     <div class="anime-card">
@@ -391,11 +270,10 @@ elif page == "📂 Genre":
                     </div>
                     """, unsafe_allow_html=True)
 
-                # Simpan ke history
                 st.session_state.history.append(f"Genre: {selected_genre}")
                 st.session_state.recommendations.append({
                     "query": f"Genre: {selected_genre}",
                     "results": knn_results
                 })
             else:
-                st.info("Belum ada hasil rekomendasi yang cocok dengan genre tersebut.")
+                st.info("Belum ada hasil yang cocok.")

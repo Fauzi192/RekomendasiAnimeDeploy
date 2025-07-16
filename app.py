@@ -56,6 +56,12 @@ h1, h2, h3, h4, h5, h6, label, span, .stTextInput label {
     color: #000000 !important;
 }
 
+h1, h2, h3, h4, h5, h6, label, span, .stTextInput label,
+.css-1dimb5e, .css-1uccc91-singleValue, .stSelectbox label,
+div[role="radiogroup"] label, .anime-body, .anime-header {
+    color: #000000 !important;
+}
+
 input, textarea {
     background-color: #FFFFFF !important;
     color: #000000 !important;
@@ -273,10 +279,13 @@ elif page == "📂 Genre":
             distances, indices = knn_model.kneighbors(query_vec, n_neighbors=50)
 
             results = []
+            names_seen = set()
+
             for i in indices[0]:
                 anime = anime_df.iloc[i]
-                if selected_genre.lower() in anime["genre"].lower():
+                if anime["name"] not in names_seen and selected_genre.lower() in anime["genre"].lower():
                     results.append(anime)
+                    names_seen.add(anime["name"])
 
             if sort_by == "Rating":
                 results = sorted(results, key=lambda x: x["rating"], reverse=True)
@@ -305,3 +314,4 @@ elif page == "📂 Genre":
             })
         else:
             st.warning("Tidak ada anime ditemukan dengan genre tersebut.")
+

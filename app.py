@@ -104,19 +104,17 @@ if page == "🏠 Home":
 Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 
 Website ini dirancang untuk membantu kamu menemukan anime baru yang mirip dengan yang kamu suka.
--
+
 ### ⚙️ Teknologi yang Digunakan:
 - 🧠 **Content-Based Filtering**  
 - 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
 - 👥 **K-Nearest Neighbors (KNN)**  
 - 💻 **Streamlit** untuk antarmuka pengguna  
 - 🐍 **Pandas** & **Scikit-learn** untuk data dan machine learning  
--
 ### ✨ Fitur Unggulan:
 - Rekomendasi berdasarkan judul anime yang kamu masukkan
 - Eksplorasi anime berdasarkan genre
 - Tampilan bersih, font jelas, dan riwayat pencarian tersimpan
--
 Silakan pilih halaman di sidebar untuk mulai eksplorasi anime favoritmu!
 """)
 

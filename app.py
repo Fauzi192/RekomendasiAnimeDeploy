@@ -217,12 +217,12 @@ elif page == "🔎 Rekomendasi":
                 if selected_type != "Semua" and a_type != selected_type:
                     continue
 
-                # Cek kemiripan genre (minimal 2 genre sama)
+                # Genre mirip minimal 1
                 genre_input = set([g.strip().lower() for g in anime_genre.split(",")])
                 genre_result = set([g.strip().lower() for g in genre.split(",")])
                 common_genres = genre_input.intersection(genre_result)
 
-                if len(common_genres) >= 2:
+                if len(common_genres) >= 1:
                     st.markdown(f"""
                     <div class="anime-card">
                         <div class="anime-header">{name}</div>
@@ -246,9 +246,8 @@ elif page == "🔎 Rekomendasi":
                     break
 
             if shown < 5:
-                st.warning(f"Hanya ditemukan {shown} anime dengan genre mirip dan type yang dipilih.")
+                st.warning(f"Hanya ditemukan {shown} anime dengan kemiripan genre minimal 1.")
 
-            # Simpan ke sesi
             st.session_state.history.append(f"{selected_title} (Type: {selected_type})")
             st.session_state.recommendations.append({
                 "query": f"{selected_title} (Type: {selected_type})",
@@ -256,6 +255,7 @@ elif page == "🔎 Rekomendasi":
             })
         else:
             st.warning("Judul tidak ditemukan.")
+
             
 # ==================== GENRE ====================
 elif page == "📂 Genre":

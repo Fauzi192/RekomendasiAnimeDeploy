@@ -52,19 +52,30 @@ section[data-testid="stSidebar"] * {
     color: #000000 !important;
 }
 
-h1, h2, h3, h4, h5, h6,
-label, span, .stTextInput label,
-.css-1dimb5e, .css-1uccc91-singleValue,
-.stSelectbox label, div[role="radiogroup"] label {
+h1, h2, h3, h4, h5, h6, label, span, .stTextInput label {
     color: #000000 !important;
 }
 
-input, textarea, .stSelectbox > div {
+.stSelectbox > div, .css-1uccc91-singleValue, .css-1dimb5e {
+    color: #000000 !important;
+    background-color: #FFFFFF !important;
+}
+
+input, textarea {
     background-color: #FFFFFF !important;
     color: #000000 !important;
     border: 1px solid #B0BEC5 !important;
     border-radius: 8px;
     padding: 10px;
+}
+
+div[role="radiogroup"] label {
+    color: #000000 !important;
+    font-weight: 500;
+}
+div[role="radiogroup"] input[type="radio"]:checked + div > label {
+    color: #000000 !important;
+    font-weight: 700;
 }
 
 .anime-card {

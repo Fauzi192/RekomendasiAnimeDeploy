@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 
-# Konfigurasi halaman
+# ==================== Konfigurasi Halaman ====================
 st.set_page_config(page_title="🎥 Rekomendasi Anime", layout="wide")
 
 # ==================== Load Data ====================
@@ -36,7 +36,7 @@ if "recommendations" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# ==================== CSS Custom ====================
+# ==================== CSS Styling ====================
 st.markdown("""
 <style>
 body, .main, .stApp {
@@ -52,31 +52,19 @@ section[data-testid="stSidebar"] * {
     color: #000000 !important;
 }
 
-h1, h2, h3, h4, h5, h6, label, span, .stTextInput label {
+h1, h2, h3, h4, h5, h6,
+label, span, .stTextInput label,
+.css-1dimb5e, .css-1uccc91-singleValue,
+.stSelectbox label, div[role="radiogroup"] label {
     color: #000000 !important;
 }
 
-h1, h2, h3, h4, h5, h6, label, span, .stTextInput label,
-.css-1dimb5e, .css-1uccc91-singleValue, .stSelectbox label,
-div[role="radiogroup"] label, .anime-body, .anime-header {
-    color: #000000 !important;
-}
-
-input, textarea {
+input, textarea, .stSelectbox > div {
     background-color: #FFFFFF !important;
     color: #000000 !important;
     border: 1px solid #B0BEC5 !important;
     border-radius: 8px;
     padding: 10px;
-}
-
-.stSelectbox > div, .css-1uccc91-singleValue, .css-1dimb5e {
-    color: #000000 !important;
-    background-color: #FFFFFF !important;
-}
-
-div[role="radiogroup"] label {
-    color: #000000 !important;
 }
 
 .anime-card {
@@ -112,16 +100,16 @@ Selamat datang di website **Rekomendasi Anime Favorit**! 🎉
 Website ini dirancang untuk membantu kamu menemukan anime baru yang mirip dengan yang kamu suka.
 
 ### ⚙️ Teknologi yang Digunakan:
-- 🧠 **Content-Based Filtering**  
-- 📊 **TF-IDF (Term Frequency–Inverse Document Frequency)**  
-- 👥 **K-Nearest Neighbors (KNN)**  
-- 💻 **Streamlit** untuk antarmuka pengguna  
-- 🐍 **Pandas** & **Scikit-learn** untuk data dan machine learning  
-### ✨ Fitur Unggulan:
+- 🧠 Content-Based Filtering
+- 📊 TF-IDF (Term Frequency–Inverse Document Frequency)
+- 👥 K-Nearest Neighbors (KNN)
+- 💻 Streamlit (Antarmuka pengguna)
+- 🐍 Pandas & Scikit-learn (Pemrosesan data & machine learning)
+
+### ✨ Fitur:
 - Rekomendasi berdasarkan judul anime yang kamu masukkan
 - Eksplorasi anime berdasarkan genre
-- Tampilan bersih, font jelas, dan riwayat pencarian tersimpan
-Silakan pilih halaman di sidebar untuk mulai eksplorasi anime favoritmu!
+- Riwayat pencarian dan hasil rekomendasi tersimpan
 """)
 
     st.subheader("🔥 Top 10 Anime Paling Populer")
@@ -202,14 +190,11 @@ elif page == "🔎 Rekomendasi":
 
             st.markdown(f"📚 **Genre**: {anime_genre}  |  ⭐ **Rating**: {anime_row['rating']}")
 
-            # Ambil vektor genre input
             query_vec = tfidf_vectorizer.transform([anime_genre])
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=100)
+            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=200)
 
             st.success(f"🎯 Rekomendasi berdasarkan genre dari: {selected_title}")
-            results = []
-            names_seen = set()
-            shown = 0
+            results, names_seen, shown = [], set(), 0
 
             for i in indices[0]:
                 result = anime_df.iloc[i]
@@ -223,7 +208,6 @@ elif page == "🔎 Rekomendasi":
                 if selected_type != "Semua" and a_type != selected_type:
                     continue
 
-                # Genre mirip minimal 1
                 genre_input = set([g.strip().lower() for g in anime_genre.split(",")])
                 genre_result = set([g.strip().lower() for g in genre.split(",")])
                 common_genres = genre_input.intersection(genre_result)
@@ -262,7 +246,6 @@ elif page == "🔎 Rekomendasi":
         else:
             st.warning("Judul tidak ditemukan.")
 
-            
 # ==================== GENRE ====================
 elif page == "📂 Genre":
     st.title("📂 Eksplorasi Berdasarkan Genre")
@@ -273,25 +256,18 @@ elif page == "📂 Genre":
 
     if selected_genre:
         filtered_df = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]
-
         if not filtered_df.empty:
             query_vec = tfidf_vectorizer.transform([selected_genre])
-            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=50)
+            distances, indices = knn_model.kneighbors(query_vec, n_neighbors=100)
 
-            results = []
-            names_seen = set()
-
+            results, names_seen = [], set()
             for i in indices[0]:
                 anime = anime_df.iloc[i]
                 if anime["name"] not in names_seen and selected_genre.lower() in anime["genre"].lower():
                     results.append(anime)
                     names_seen.add(anime["name"])
 
-            if sort_by == "Rating":
-                results = sorted(results, key=lambda x: x["rating"], reverse=True)
-            else:
-                results = sorted(results, key=lambda x: x["members"], reverse=True)
-
+            results = sorted(results, key=lambda x: x[sort_by.lower()], reverse=True)
             results = results[:5]
 
             st.subheader(f"🎯 Rekomendasi Anime Genre '{selected_genre}'")
@@ -314,4 +290,3 @@ elif page == "📂 Genre":
             })
         else:
             st.warning("Tidak ada anime ditemukan dengan genre tersebut.")
-

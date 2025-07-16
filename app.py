@@ -261,7 +261,7 @@ elif page == "📂 Genre":
 
     all_genres = sorted(set(g.strip() for genres in anime_df["genre"].dropna() for g in genres.split(",")))
     selected_genre = st.selectbox("🎭 Pilih Genre", all_genres)
-    sort_by = st.radio("📊 Urutkan berdasarkan:", ["Rating", "Members"])
+    sort_by = st.selectbox("📊 Urutkan berdasarkan:", ["Rating", "Members"])
 
     if selected_genre:
         filtered_df = anime_df[anime_df["genre"].str.contains(selected_genre, case=False, na=False)]

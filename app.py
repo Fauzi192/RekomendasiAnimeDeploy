@@ -69,8 +69,11 @@ input, textarea {
     background-color: #FFFFFF !important;
 }
 
-div[role="radiogroup"] label {
-    color: #000000 !important;
+div[role="radiogroup"] > div > label {
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    padding: 5px 10px;
+    border-radius: 8px;
 }
 
 .anime-card {

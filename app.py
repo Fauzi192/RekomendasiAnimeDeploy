@@ -41,27 +41,29 @@ st.markdown("""
 <style>
 /* ====== Global Background & Font ====== */
 body, .main, .stApp {
-    background-color: #D6EEFF !important;  /* Biru langit cerah */
+    background-color: #F5F5F5 !important;  /* Abu muda */
     color: #1C3F60 !important;
     font-family: 'Segoe UI', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+/* ====== Sidebar ====== */
+section[data-testid="stSidebar"] {
+    background-color: #E0E0E0 !important;  /* Abu muda lebih gelap */
+    transition: background-color 0.3s ease;
+}
+section[data-testid="stSidebar"] .css-10trblm,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] .css-1v0mbdj {
+    color: #000000 !important;
+    font-weight: 500;
 }
 
 /* ====== Judul ====== */
 h1, h2, h3, h4, h5, h6 {
     color: #2A5D9F !important;
-}
-
-/* ====== Sidebar ====== */
-section[data-testid="stSidebar"] {
-    background-color: #CCE9FF !important;
-}
-
-section[data-testid="stSidebar"] .css-10trblm,
-section[data-testid="stSidebar"] label,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] .css-1v0mbdj {
-    color: #000000 !important;  /* WARNA HITAM untuk teks di navigasi */
-    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 /* ====== Label Form & Komponen ====== */
@@ -69,60 +71,57 @@ label, .stSelectbox label, .stTextInput label, .stRadio label {
     color: #2A5D9F !important;
     font-weight: 600;
     font-size: 15px;
+    transition: color 0.3s ease;
 }
 
 /* ====== Input Field ====== */
 input, textarea {
-    background-color: #F0F8FF !important;
+    background-color: #FAFAFA !important;
     color: #1C3F60 !important;
-    border-radius: 8px !important;
-    border: 1px solid #5DADE2 !important;
+    border-radius: 10px !important;
+    border: 1px solid #B0BEC5 !important;
     padding: 10px !important;
+    transition: all 0.3s ease-in-out;
 }
-.stTextInput > div > input {
-    background-color: #F0F8FF !important;
-    color: #1C3F60 !important;
-}
-.stTextInput > div > input:focus {
-    border-color: #5DADE2 !important;
-    background-color: #E0F0FF !important;
+input:focus, textarea:focus {
+    background-color: #FFFFFF !important;
+    border: 1px solid #64B5F6 !important;
+    box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
 }
 
 /* ====== Selectbox (Dropdown) ====== */
 .stSelectbox > div {
-    background-color: #F0F8FF !important;
+    background-color: #FAFAFA !important;
     color: #1C3F60 !important;
     border-radius: 8px !important;
-    border: 1px solid #5DADE2 !important;
+    border: 1px solid #B0BEC5 !important;
 }
 .css-1uccc91-singleValue,
-.css-1okebmr-indicatorSeparator,
-.css-qc6sy-singleValue,
 .css-1dimb5e,
 .css-1n76uvr,
-.css-1e3x2xa,
-.css-11unzgr,
-.css-14el2xx-placeholder,
-.css-319lph-ValueContainer {
-    background-color: #F0F8FF !important;
+.css-14el2xx-placeholder {
     color: #1C3F60 !important;
 }
 .css-1n76uvr .css-1dimb5e:hover {
-    background-color: #E0F0FF !important;
+    background-color: #ECEFF1 !important;
 }
 
-/* ====== Radio Button (Sidebar & Konten) ====== */
+/* ====== Radio Button ====== */
 div[role="radiogroup"] label {
     color: #000000 !important;
     font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
 }
 div[role="radiogroup"] input:checked + div > label {
     color: #000000 !important;
+    background-color: #D0E9FF !important;
+    font-weight: 700;
 }
 div[role="radiogroup"] label:hover {
-    background-color: #CDE7FB !important;
-    border-radius: 5px;
-    color: #000000 !important;
+    background-color: #CFD8DC !important;
+    transform: scale(1.03);
 }
 
 /* ====== Kartu Anime ====== */
@@ -132,13 +131,19 @@ div[role="radiogroup"] label:hover {
     border-radius: 16px;
     margin-bottom: 16px;
     border-left: 5px solid #5DADE2;
-    box-shadow: 0 4px 10px rgba(93, 173, 226, 0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.anime-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 .anime-header {
     font-size: 20px;
     font-weight: bold;
     color: #2A5D9F !important;
     margin-bottom: 8px;
+    transition: color 0.3s ease;
 }
 .anime-body {
     font-size: 15px;
@@ -150,11 +155,17 @@ div[role="radiogroup"] label:hover {
 button, .css-1x8cf1d.edgvbvh3 {
     background-color: #5DADE2 !important;
     color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover, .css-1x8cf1d.edgvbvh3:hover {
+    background-color: #3498DB !important;
+    transform: scale(1.03);
 }
 </style>
 """, unsafe_allow_html=True)
-
-
 
 # Sidebar navigasi
 st.sidebar.title("📚 Navigasi")

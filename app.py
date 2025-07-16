@@ -60,7 +60,7 @@ section[data-testid="stSidebar"] .css-10trblm,
 section[data-testid="stSidebar"] label,
 section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] .css-1v0mbdj {
-    color: #1C3F60 !important;
+    color: #000000 !important;  /* WARNA HITAM untuk teks di navigasi */
     font-weight: 500;
 }
 
@@ -111,17 +111,18 @@ input, textarea {
     background-color: #E0F0FF !important;
 }
 
-/* ====== Radio Button ====== */
+/* ====== Radio Button (Sidebar & Konten) ====== */
 div[role="radiogroup"] label {
-    color: #1C1C1C !important;
-    font-weight: 500;
+    color: #000000 !important;
+    font-weight: 600;
 }
 div[role="radiogroup"] input:checked + div > label {
-    color: #1C1C1C !important;
+    color: #000000 !important;
 }
 div[role="radiogroup"] label:hover {
     background-color: #CDE7FB !important;
     border-radius: 5px;
+    color: #000000 !important;
 }
 
 /* ====== Kartu Anime ====== */
@@ -152,6 +153,7 @@ button, .css-1x8cf1d.edgvbvh3 {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 # Sidebar navigasi
